@@ -205,6 +205,7 @@ if (calculator) {
     const perimeterKeys = Object.keys(perimeter);
 
     const roomsBox = calculator.querySelector('[data-calc-rooms]');
+    const addRoomButton = calculator.querySelector('[data-calc-add]');
     const plan = calculator.querySelector('[data-calc-plan]');
     const areaOutput = calculator.querySelector('[data-calc-area]');
     const perimeterOutput = calculator.querySelector('[data-calc-perimeter-length]');
@@ -375,6 +376,7 @@ if (calculator) {
         }
 
         const tick = (x1, y1, x2, y2) => svgElement('line', { x1, y1, x2, y2, stroke: '#676d73', 'stroke-width': 1 });
+        const areaLabel = svgElement('text', { x: x + w / 2, y: y + h / 2, 'text-anchor': 'middle', class: 'plan-area' }, `${number.format(area)} ${labels.sqm}`);
 
         nodes.push(
             tick(x, y - 16, x + w, y - 16),
@@ -389,14 +391,32 @@ if (calculator) {
                 { x: x - 22, y: y + h / 2, 'text-anchor': 'middle', transform: `rotate(-90 ${x - 22} ${y + h / 2})`, class: 'plan-label' },
                 `${number.format(room.width)} ${labels.meter}`,
             ),
-            svgElement(
-                'text',
-                { x: x + w / 2, y: y + h / 2 + 8, 'text-anchor': 'middle', class: 'plan-area', style: w < 90 || h < 50 ? 'font-size: 16px' : '' },
-                `${number.format(area)} ${labels.sqm}`,
-            ),
+            areaLabel,
         );
 
         plan.replaceChildren(...nodes);
+        fitAreaLabel(areaLabel, x, y, w, h);
+    };
+
+    // Keep the area label inside the drawn room: shrink it when it is too wide, and turn it
+    // along the long side of tall, narrow rooms.
+    const fitAreaLabel = (label, x, y, w, h) => {
+        const padding = 10;
+        const largest = 24;
+
+        label.style.fontSize = `${largest}px`;
+        const length = label.getComputedTextLength();
+        const vertical = length > w - padding * 2 && h > w;
+        const along = (vertical ? h : w) - padding * 2;
+        const across = (vertical ? w : h) - padding;
+        const size = Math.max(9, Math.min(largest, (largest * along) / length, across * 0.75));
+
+        label.style.fontSize = `${size}px`;
+        label.setAttribute('y', y + h / 2 + size * 0.35);
+
+        if (vertical) {
+            label.setAttribute('transform', `rotate(-90 ${x + w / 2} ${y + h / 2})`);
+        }
     };
 
     const renderRooms = () => {
@@ -404,10 +424,16 @@ if (calculator) {
             const isActive = index === active;
             const wrapper = element(
                 'div',
-                isActive ? 'flex items-center rounded-lg bg-ink text-white' : 'flex items-center rounded-lg border border-line bg-white text-ink-soft hover:border-ink/30',
+                isActive
+                    ? 'flex shrink-0 items-center rounded-lg border border-ink bg-ink text-white'
+                    : 'flex shrink-0 items-center rounded-lg border border-line bg-white text-ink-soft hover:border-ink/30',
             );
 
-            const select = element('button', 'px-3 py-1.5 text-sm font-semibold', `${labels.room} ${index + 1} · ${number.format(measure(room).area)} ${labels.sqm}`);
+            const select = element(
+                'button',
+                'px-3 py-1.5 text-sm font-semibold whitespace-nowrap tabular-nums',
+                `${labels.room} ${index + 1} · ${number.format(measure(room).area)} ${labels.sqm}`,
+            );
             select.type = 'button';
             select.dataset.calcRoom = String(index);
             select.setAttribute('aria-pressed', String(isActive));
@@ -424,18 +450,8 @@ if (calculator) {
             return wrapper;
         });
 
-        if (rooms.length < maxRooms) {
-            const add = element(
-                'button',
-                'rounded-lg border border-dashed border-ink/25 px-3 py-1.5 text-sm font-semibold text-ink-soft transition-colors hover:border-jade hover:text-jade-700',
-                `+ ${labels.add_room}`,
-            );
-            add.type = 'button';
-            add.dataset.calcAdd = '';
-            items.push(add);
-        }
-
         roomsBox.replaceChildren(...items);
+        addRoomButton.hidden = rooms.length >= maxRooms;
     };
 
     const fillRange = (range) => {
@@ -667,6 +683,9 @@ if (calculator) {
     });
 
     update();
+
+    // The area label is measured to fit the room, so measure again once the web fonts have loaded.
+    document.fonts?.ready.then(() => renderPlan(rooms[active]));
 }
 
 const mapElement = document.querySelector('[data-map]');

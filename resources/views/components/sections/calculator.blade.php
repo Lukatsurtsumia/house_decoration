@@ -33,12 +33,26 @@
             data-calculator-config='@json($calculatorConfig)'
             class="mt-12 rounded-2xl border border-line bg-white shadow-sm"
         >
-            <div class="sticky top-16 z-20 flex flex-wrap items-center justify-between gap-3 rounded-t-2xl border-b border-line bg-white/95 px-4 py-3 backdrop-blur sm:px-6">
-                <div data-calc-rooms class="flex flex-wrap items-center gap-2"></div>
-                <p class="flex items-baseline gap-2">
-                    <span class="text-sm text-muted">{{ $labels['total'] }}</span>
-                    <span data-calc-head-total class="font-display text-2xl font-semibold text-ink tabular-nums"></span>
-                </p>
+            <div class="sticky top-16 z-20 flex flex-col gap-2.5 rounded-t-2xl border-b border-line bg-white/95 px-4 py-3 backdrop-blur sm:flex-row sm:items-center sm:gap-4 sm:px-6">
+                {{-- On phones the room chips scroll sideways instead of wrapping, so the bar keeps one height while numbers change. --}}
+                <div
+                    data-calc-rooms
+                    class="order-2 -mx-4 flex min-w-0 flex-1 items-center gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:order-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
+                ></div>
+
+                <div class="order-1 flex items-center justify-between gap-3 sm:order-2 sm:shrink-0">
+                    <p class="flex items-baseline gap-2 whitespace-nowrap">
+                        <span class="text-sm text-muted">{{ $labels['total'] }}</span>
+                        <span data-calc-head-total class="font-display text-2xl font-semibold text-ink tabular-nums"></span>
+                    </p>
+                    <button
+                        type="button"
+                        data-calc-add
+                        class="shrink-0 rounded-lg border border-dashed border-ink/25 px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-ink-soft transition-colors hover:border-jade hover:text-jade-700 sm:order-first"
+                    >
+                        + <span class="sm:hidden">{{ $labels['add_room_short'] }}</span><span class="hidden sm:inline">{{ $labels['add_room'] }}</span>
+                    </button>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12">
@@ -180,7 +194,7 @@
                 </div>
                 <div class="flex flex-col justify-end lg:col-span-5 lg:items-end lg:text-right">
                     <p class="text-sm text-white/60">{{ $labels['total'] }}</p>
-                    <p data-calc-total class="font-display text-5xl font-semibold tabular-nums">&nbsp;</p>
+                    <p data-calc-total class="font-display text-4xl font-semibold whitespace-nowrap tabular-nums sm:text-5xl">&nbsp;</p>
                     <p data-calc-total-sr class="sr-only" aria-live="polite"></p>
 
                     <div class="mt-6 flex flex-col gap-3 sm:flex-row lg:justify-end">

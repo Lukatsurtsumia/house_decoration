@@ -131,6 +131,7 @@ return [
         'labels' => [
             'room' => 'ოთახი',
             'add_room' => 'ოთახის დამატება',
+            'add_room_short' => 'ოთახი',
             'remove_room' => 'ოთახის წაშლა',
             'plan' => 'ოთახის გეგმა',
             'length' => 'სიგრძე',
