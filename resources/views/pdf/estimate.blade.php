@@ -46,7 +46,7 @@
         body {
             font-family: 'Noto Sans Georgian';
             font-size: 9.5pt;
-            line-height: 1.5;
+            line-height: 1.35;
             color: #17191b;
         }
 
@@ -139,13 +139,13 @@
 
         .rule {
             height: 3px;
-            margin: 6mm 0 7mm;
+            margin: 5mm 0 5mm;
             background: #0f8a5f;
         }
 
         /* Summary */
         .summary {
-            padding: 4mm 6mm;
+            padding: 3mm 5mm;
             border-radius: 6px;
             background: #f3f5f1;
         }
@@ -156,22 +156,22 @@
         }
 
         .summary .value {
-            font-size: 13pt;
+            font-size: 12pt;
         }
 
         .summary .total {
-            font-size: 17pt;
+            font-size: 15pt;
             color: #0b6b4a;
         }
 
         /* Rooms */
         .room {
-            margin-top: 8mm;
+            margin-top: 6mm;
             page-break-inside: avoid;
         }
 
         .room-head td {
-            padding-bottom: 2.5mm;
+            padding-bottom: 2mm;
             border-bottom: 1.5px solid #17191b;
             vertical-align: bottom;
         }
@@ -183,11 +183,11 @@
 
         .plan-cell {
             width: 46mm;
-            padding: 4mm 6mm 0 0;
+            padding: 3mm 6mm 0 0;
         }
 
         .plan {
-            padding: 3mm 0;
+            padding: 2mm 0;
             border-radius: 6px;
             background: #f3f5f1;
             text-align: center;
@@ -208,7 +208,7 @@
         }
 
         .dim {
-            font-size: 7.5pt;
+            font-size: 7pt;
             color: #676d73;
         }
 
@@ -217,7 +217,7 @@
         }
 
         .lines th {
-            padding: 2mm 0 1.5mm;
+            padding: 1.5mm 0 1.2mm;
             border-bottom: 1px solid #e2e5e0;
             font-size: 7.5pt;
             font-weight: normal;
@@ -226,7 +226,7 @@
         }
 
         .lines td {
-            padding: 2mm 0;
+            padding: 1.5mm 0;
             border-bottom: 1px solid #eef0ec;
         }
 
@@ -243,8 +243,8 @@
 
         /* Grand total */
         .grand {
-            margin-top: 9mm;
-            padding: 5mm 6mm;
+            margin-top: 5mm;
+            padding: 3.5mm 6mm;
             border-radius: 6px;
             background: #17191b;
             color: #ffffff;
@@ -261,12 +261,12 @@
         }
 
         .grand .value {
-            font-size: 22pt;
+            font-size: 18pt;
         }
 
         /* Notes and contacts */
         .info {
-            margin-top: 8mm;
+            margin-top: 5mm;
             page-break-inside: avoid;
         }
 
@@ -278,22 +278,22 @@
             padding-left: 8mm;
         }
 
-        .info h3 {
-            margin: 0 0 2mm;
-            font-size: 10.5pt;
-        }
-
-        .info ul {
-            margin: 0;
-            padding-left: 4mm;
-        }
-
-        .info li {
+        .info-title {
             margin-bottom: 1.2mm;
+            font-size: 9.5pt;
+        }
+
+        .info-item {
+            margin-bottom: 0.8mm;
+            padding-left: 3.5mm;
+            text-indent: -3.5mm;
+            font-size: 8pt;
+            line-height: 1.35;
         }
 
         .contact-row {
-            margin-bottom: 1mm;
+            margin-bottom: 0.8mm;
+            font-size: 8pt;
         }
 
         footer {
@@ -363,8 +363,8 @@
 
     @foreach ($estimate->rooms as $room)
         @php
-            // Draw the room to scale inside a 32 x 22 mm box.
-            $scale = min(32 / $room['length'], 22 / $room['width']);
+            // Draw the room to scale inside a 32 x 16 mm box.
+            $scale = min(32 / $room['length'], 16 / $room['width']);
             $planWidth = round($room['length'] * $scale, 1);
             $planHeight = round($room['width'] * $scale, 1);
         @endphp
@@ -437,15 +437,13 @@
     <table class="info">
         <tr>
             <td>
-                <h3 class="display">{{ $pdf['notes_title'] }}</h3>
-                <ul>
-                    @foreach ($pdf['notes'] as $note)
-                        <li>{{ $note }}</li>
-                    @endforeach
-                </ul>
+                <div class="display info-title">{{ $pdf['notes_title'] }}</div>
+                @foreach ($pdf['notes'] as $note)
+                    <div class="info-item">• {{ $note }}</div>
+                @endforeach
             </td>
             <td>
-                <h3 class="display">{{ $pdf['contact_title'] }}</h3>
+                <div class="display info-title">{{ $pdf['contact_title'] }}</div>
                 <div class="contact-row">{{ $contact['labels']['phone'] }}: <strong>{{ $contact['phone'] }}</strong></div>
                 <div class="contact-row">{{ $contact['labels']['email'] }}: <strong>{{ $contact['email'] }}</strong></div>
                 <div class="contact-row">{{ $contact['labels']['hours'] }}: {{ $contact['hours'] }}</div>
