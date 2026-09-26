@@ -16,7 +16,7 @@ git push origin main
 
 ## 2. DNS
 
-Point an **A record** for your domain (for example `plafond.boxeros.app`) to the Coolify
+Point an **A record** for `plafond.arte-company.com` to the Coolify
 server's IP. If the zone is on Cloudflare, keep it **DNS only (grey cloud)** for the first
 deploy so Coolify can issue its Let's Encrypt certificate.
 
@@ -25,7 +25,7 @@ deploy so Coolify can issue its Let's Encrypt certificate.
 1. **+ New → Application → Private Repository (GitHub App)** → `Lukatsurtsumia/house_decoration`, branch `main`.
 2. **Build Pack: Dockerfile.** Do not use Nixpacks.
 3. **Ports Exposes:** `8080`.
-4. **Domains:** `https://your-domain`.
+4. **Domains:** `https://plafond.arte-company.com`.
 5. **Health check** (optional): path `/up`, port `8080`.
 
 ## 4. Environment variables
@@ -38,8 +38,8 @@ APP_NAME=Plafond
 APP_ENV=production
 APP_DEBUG=false
 APP_KEY=                  # run `php artisan key:generate --show` locally and paste the base64:... value
-APP_URL=https://your-domain
-ASSET_URL=https://your-domain
+APP_URL=https://plafond.arte-company.com
+ASSET_URL=https://plafond.arte-company.com
 SESSION_SECURE_COOKIE=true
 ```
 
@@ -49,7 +49,7 @@ without it the CSS/JS links can come out as `http://` and be blocked on the `htt
 ## 5. Deploy
 
 Click **Deploy**. On start the container caches config, routes and views automatically.
-Check `https://your-domain/up`, the home page, and the calculator's **PDF-ის ჩამოტვირთვა** button.
+Check `https://plafond.arte-company.com/up`, the home page, and the calculator's **PDF-ის ჩამოტვირთვა** button.
 
 ## Notes
 
