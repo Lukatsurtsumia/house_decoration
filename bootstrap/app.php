@@ -12,7 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // In production the container sits behind Coolify's proxy (and possibly Cloudflare) and
+        // only receives plain HTTP. Trusting the forwarded headers lets Laravel see the original
+        // HTTPS request, so URLs, redirects and secure cookies use https.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
