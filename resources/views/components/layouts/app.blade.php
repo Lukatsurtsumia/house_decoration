@@ -13,7 +13,8 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-paper text-ink antialiased">
+    {{-- overflow-x-clip stops sideways scrolling without breaking the sticky headers (unlike overflow-hidden). --}}
+    <body class="overflow-x-clip bg-paper text-ink antialiased">
         {{ $slot }}
     </body>
 </html>

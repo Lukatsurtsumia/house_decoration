@@ -20,7 +20,7 @@
 
 <section id="calculator" class="scroll-mt-16 bg-mist py-20 sm:py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div data-reveal class="grid gap-6 lg:grid-cols-12 lg:items-end">
+        <div data-reveal class="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-end">
             <div class="lg:col-span-7">
                 <p class="inline-flex rounded-full bg-white px-3 py-1 text-xs font-semibold text-jade-700 ring-1 ring-line">{{ $calculator['eyebrow'] }}</p>
                 <h2 class="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{{ $calculator['title'] }}</h2>
@@ -111,7 +111,7 @@
 
                     <fieldset>
                         <legend class="text-sm font-semibold text-ink">{{ $labels['extras'] }}</legend>
-                        <div class="mt-3 grid gap-2 sm:grid-cols-2">
+                        <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                             @foreach ($pricing['extras'] as $key => $extra)
                                 <div data-calc-extra-row="{{ $key }}" class="flex items-center justify-between gap-3 rounded-xl border border-line px-4 py-3">
                                     <div class="min-w-0">
@@ -173,7 +173,7 @@
                 </div>
             </div>
 
-            <div class="grid gap-8 rounded-b-2xl bg-ink px-4 py-6 text-white sm:px-6 sm:py-8 lg:grid-cols-12">
+            <div class="grid grid-cols-1 gap-8 rounded-b-2xl bg-ink px-4 py-6 text-white sm:px-6 sm:py-8 lg:grid-cols-12">
                 <div class="lg:col-span-7">
                     <h3 class="font-display text-xl font-semibold">{{ $labels['summary'] }}</h3>
                     <div data-calc-lines class="mt-4 space-y-4"></div>

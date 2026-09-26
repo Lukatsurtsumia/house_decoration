@@ -15,7 +15,7 @@
 
 <section id="area" class="scroll-mt-16 bg-white py-20 sm:py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div data-reveal class="grid gap-6 lg:grid-cols-12 lg:items-end">
+        <div data-reveal class="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-end">
             <div class="lg:col-span-7">
                 <p class="inline-flex rounded-full bg-jade-50 px-3 py-1 text-xs font-semibold text-jade-700">{{ $area['eyebrow'] }}</p>
                 <h2 class="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{{ $area['title'] }}</h2>
@@ -37,7 +37,7 @@
 </section>
 
 <section id="contact" class="scroll-mt-16 bg-jade-50 py-16 sm:py-20">
-    <div class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:items-center lg:px-8">
+    <div class="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:items-center lg:px-8">
         <div data-reveal class="lg:col-span-6">
             <p class="inline-flex rounded-full bg-white px-3 py-1 text-xs font-semibold text-jade-700">{{ $contact['eyebrow'] }}</p>
             <h2 class="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{{ $contact['title'] }}</h2>
