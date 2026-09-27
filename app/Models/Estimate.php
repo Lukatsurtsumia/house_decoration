@@ -33,6 +33,7 @@ class Estimate
             $edge = round(2 * ($length + $width), 2);
 
             $finish = $pricing['finishes'][$room['finish']];
+            $wall = $pricing['walls'][$room['wall'] ?? array_key_first($pricing['walls'])];
             $ceilingCost = $area * $finish['price'];
             $minimum = $pricing['minimum']['price'];
 
@@ -44,6 +45,11 @@ class Estimate
                 'amount' => (float) max($ceilingCost, $minimum),
                 'note' => $ceilingCost < $minimum ? $labels['minimum'] : null,
             ]];
+
+            // Tile and porcelain walls add a fixing charge along the whole perimeter.
+            if ($wall['price'] > 0) {
+                $lines[] = self::line($wall, $edge);
+            }
 
             foreach ($pricing['extras'] as $key => $extra) {
                 $quantity = (float) ($room['extras'][$key] ?? 0);
@@ -78,7 +84,7 @@ class Estimate
     }
 
     /**
-     * @param  array<string, mixed>  $item  an extras or perimeter entry from the pricing config
+     * @param  array<string, mixed>  $item  a walls, extras or perimeter entry from the pricing config
      * @return array<string, mixed>
      */
     private static function line(array $item, float $quantity): array

@@ -166,7 +166,7 @@
 
         /* Rooms */
         .room {
-            margin-top: 6mm;
+            margin-top: 5mm;
             page-break-inside: avoid;
         }
 
@@ -217,7 +217,7 @@
         }
 
         .lines th {
-            padding: 1.5mm 0 1.2mm;
+            padding: 1.2mm 0 1mm;
             border-bottom: 1px solid #e2e5e0;
             font-size: 7.5pt;
             font-weight: normal;
@@ -226,7 +226,7 @@
         }
 
         .lines td {
-            padding: 1.5mm 0;
+            padding: 1mm 0;
             border-bottom: 1px solid #eef0ec;
         }
 

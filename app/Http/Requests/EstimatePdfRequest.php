@@ -27,7 +27,7 @@ class EstimatePdfRequest extends FormRequest
     }
 
     /**
-     * Only sizes, finishes and add-ons that exist in config/homepage.php are accepted,
+     * Only sizes, finishes, wall types and add-ons that exist in config/homepage.php are accepted,
      * so a downloaded estimate can never contain made-up prices.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -43,6 +43,8 @@ class EstimatePdfRequest extends FormRequest
             'rooms.*.length' => $size,
             'rooms.*.width' => $size,
             'rooms.*.finish' => ['required', Rule::in(array_keys($pricing['finishes']))],
+            // Optional so a page opened before walls were added can still download its estimate.
+            'rooms.*.wall' => ['sometimes', Rule::in(array_keys($pricing['walls']))],
             'rooms.*.extras' => ['sometimes', 'array:'.implode(',', array_keys($pricing['extras']))],
             'rooms.*.extras.*' => ['numeric', 'min:0', 'max:999'],
             'rooms.*.perimeter' => ['sometimes', 'array:'.implode(',', array_keys($pricing['perimeter']))],

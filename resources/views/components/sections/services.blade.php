@@ -61,6 +61,7 @@
                                     <x-price
                                         :amount="$entry['price']"
                                         :unit="$entry['unit'] ?? null"
+                                        :prefix="str_starts_with($path, 'walls.') ? '+' : ''"
                                         :currency="$pricing['currency']"
                                         class="font-semibold whitespace-nowrap text-ink"
                                         unit-class="font-normal text-muted"

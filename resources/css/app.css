@@ -159,6 +159,30 @@
     background: linear-gradient(135deg, #d4d8d3 0%, #ffffff 42%, #cfd4ce 58%, #f1f3f0 100%);
 }
 
+/* Wall swatches: plain plaster, small tiles, large porcelain slabs. */
+.swatch-plaster {
+    background: linear-gradient(135deg, #ece9e2 0%, #e0dcd3 100%);
+}
+
+.swatch-tile {
+    background-color: #f7f8f6;
+    background-image:
+        linear-gradient(#c3c8c2 1px, transparent 1px),
+        linear-gradient(90deg, #c3c8c2 1px, transparent 1px);
+    background-position: -1px -1px;
+    background-size: 8px 8px;
+}
+
+.swatch-porcelain {
+    background-color: #e9e7e3;
+    background-image:
+        linear-gradient(#b9bdb7 1px, transparent 1px),
+        linear-gradient(90deg, #b9bdb7 1px, transparent 1px),
+        linear-gradient(135deg, #f6f5f2 0%, #dedbd5 60%, #efede9 100%);
+    background-position: -1px -1px, -1px -1px, 0 0;
+    background-size: 16px 16px, 16px 16px, 100% 100%;
+}
+
 /* Room plan drawing. */
 .plan-label {
     font-family: var(--font-sans);

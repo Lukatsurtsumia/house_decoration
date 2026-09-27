@@ -10,6 +10,7 @@
         'currency' => $pricing['currency'],
         'minimum' => $pricing['minimum']['price'],
         'finishes' => $pricing['finishes'],
+        'walls' => $pricing['walls'],
         'extras' => $pricing['extras'],
         'perimeter' => $pricing['perimeter'],
         'dimensions' => $dimensions,
@@ -34,25 +35,30 @@
             class="mt-12 rounded-2xl border border-line bg-white shadow-sm"
         >
             <div class="sticky top-16 z-20 flex flex-col gap-2.5 rounded-t-2xl border-b border-line bg-white/95 px-4 py-3 backdrop-blur sm:flex-row sm:items-center sm:gap-4 sm:px-6">
-                {{-- On phones the room chips scroll sideways instead of wrapping, so the bar keeps one height while numbers change. --}}
-                <div
-                    data-calc-rooms
-                    class="order-2 -mx-4 flex min-w-0 flex-1 items-center gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:order-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
-                ></div>
-
-                <div class="order-1 flex items-center justify-between gap-3 sm:order-2 sm:shrink-0">
-                    <p class="flex items-baseline gap-2 whitespace-nowrap">
-                        <span class="text-sm text-muted">{{ $labels['total'] }}</span>
-                        <span data-calc-head-total class="font-display text-2xl font-semibold text-ink tabular-nums"></span>
-                    </p>
+                {{-- On phones the total has the top row to itself, and the room chips scroll sideways
+                     beside the add button, so the bar keeps its size however long the numbers get. --}}
+                <div class="@container order-2 flex min-w-0 flex-1 items-center gap-2 sm:order-1 sm:gap-4">
+                    <div
+                        data-calc-rooms
+                        class="-ml-4 flex min-w-0 flex-1 items-center gap-2 overflow-x-auto px-4 [mask-image:linear-gradient(to_right,black_calc(100%-1rem),transparent)] [scrollbar-width:none] sm:ml-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:[mask-image:none] [&::-webkit-scrollbar]:hidden"
+                    ></div>
+                    {{-- With very large text on a narrow phone the button shrinks to "+"; aria-label keeps its name. --}}
                     <button
                         type="button"
                         data-calc-add
-                        class="shrink-0 rounded-lg border border-dashed border-ink/25 px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-ink-soft transition-colors hover:border-jade hover:text-jade-700 sm:order-first"
+                        aria-label="{{ $labels['add_room'] }}"
+                        class="flex shrink-0 items-center gap-1.5 rounded-lg border border-dashed border-ink/25 px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-ink-soft transition-colors hover:border-jade hover:text-jade-700"
                     >
-                        + <span class="sm:hidden">{{ $labels['add_room_short'] }}</span><span class="hidden sm:inline">{{ $labels['add_room'] }}</span>
+                        <span aria-hidden="true">+</span>
+                        <span class="sm:hidden @max-[15rem]:hidden">{{ $labels['add_room_short'] }}</span>
+                        <span class="hidden sm:inline">{{ $labels['add_room'] }}</span>
                     </button>
                 </div>
+
+                <p class="order-1 flex items-baseline gap-2 whitespace-nowrap sm:order-2 sm:shrink-0">
+                    <span class="text-sm text-muted">{{ $labels['total'] }}</span>
+                    <span data-calc-head-total class="font-display text-2xl font-semibold text-ink tabular-nums"></span>
+                </p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12">
@@ -117,6 +123,28 @@
                                     <span>
                                         <span class="block text-sm font-semibold text-ink">{{ $finish['name'] }}</span>
                                         <x-price :amount="$finish['price']" :unit="$finish['unit']" :currency="$pricing['currency']" class="text-xs text-muted" />
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-sm font-semibold text-ink">{{ $labels['walls'] }}</legend>
+                        <p class="mt-1 text-xs leading-relaxed text-muted">{{ $labels['walls_hint'] }}</p>
+                        {{-- One row per wall type on phones, where the labels are too long for three columns. --}}
+                        <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
+                            @foreach ($pricing['walls'] as $key => $wall)
+                                <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-line p-3 transition hover:border-ink/30 has-checked:border-jade has-checked:bg-jade-50 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-jade sm:flex-col sm:items-start sm:p-4">
+                                    <input type="radio" name="calc-wall" value="{{ $key }}" data-calc-wall class="sr-only" @checked($loop->first)>
+                                    <span class="swatch swatch-{{ $key }} size-6 shrink-0 rounded-md ring-1 ring-ink/10 sm:size-8"></span>
+                                    <span class="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 sm:block">
+                                        <span class="block text-sm font-semibold text-ink">{{ $wall['label'] }}</span>
+                                        @if ($wall['price'] > 0)
+                                            <x-price :amount="$wall['price']" :unit="$wall['unit']" prefix="+" :currency="$pricing['currency']" class="shrink-0 text-xs whitespace-nowrap text-muted" />
+                                        @else
+                                            <span class="shrink-0 text-xs whitespace-nowrap text-muted">{{ $labels['wall_included'] }}</span>
+                                        @endif
                                     </span>
                                 </label>
                             @endforeach

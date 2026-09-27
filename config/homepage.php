@@ -70,9 +70,9 @@ return [
         'items' => [
             [
                 'name' => 'ჭერი ნებისმიერ ოთახში',
-                'description' => 'მისაღები, საძინებელი, აბაზანა თუ სამზარეულო. ორთქლი და ტენი ფირს არ აზიანებს, ფასი კი მოიცავს ფირს, პროფილს და მონტაჟს. პატარა ოთახებზე მოქმედებს მინიმალური ღირებულება.',
+                'description' => 'მისაღები, საძინებელი, აბაზანა თუ სამზარეულო. ორთქლი და ტენი ფირს არ აზიანებს, ფასი კი მოიცავს ფირს, პროფილს და მონტაჟს. კაფელზე ან კერამო-გრანიტზე დამაგრება ცალკე ითვლება, კედლის სიგრძით. პატარა ოთახებზე მოქმედებს მინიმალური ღირებულება.',
                 'image' => 'https://images.pexels.com/photos/6970048/pexels-photo-6970048.jpeg?auto=compress&cs=tinysrgb&w=1400',
-                'prices' => ['finishes.matte', 'finishes.satin', 'finishes.gloss', 'minimum'],
+                'prices' => ['finishes.matte', 'finishes.satin', 'finishes.gloss', 'minimum', 'walls.tile', 'walls.porcelain'],
                 'preset' => [],
             ],
             [
@@ -105,6 +105,15 @@ return [
             'matte' => ['name' => 'მქრქალი', 'price' => 21, 'unit' => 'მ²'],
             'satin' => ['name' => 'სატინი', 'price' => 23, 'unit' => 'მ²'],
             'gloss' => ['name' => 'პრიალა', 'price' => 25, 'unit' => 'მ²'],
+        ],
+
+        // The profile is fixed to the walls, and drilling into tile or porcelain takes longer, so
+        // those walls add a charge per meter of the room's perimeter. `label` is the calculator
+        // option, `name` the line on the estimate.
+        'walls' => [
+            'plaster' => ['label' => 'ბათქაში / ბეტონი', 'name' => 'ჩვეულებრივი კედელი', 'price' => 0, 'unit' => 'მ'],
+            'tile' => ['label' => 'კაფელი', 'name' => 'დამაგრება კაფელზე', 'price' => 3, 'unit' => 'მ'],
+            'porcelain' => ['label' => 'კერამო-გრანიტი', 'name' => 'დამაგრება კერამო-გრანიტზე', 'price' => 6, 'unit' => 'მ'],
         ],
 
         // Counted add-ons. `step` defaults to 1.
@@ -141,6 +150,9 @@ return [
             'area' => 'ფართი',
             'perimeter' => 'პერიმეტრი',
             'finish' => 'ფაქტურა',
+            'walls' => 'კედლები',
+            'walls_hint' => 'პროფილი კედელზე მაგრდება, ამიტომ ფასი კედლის მასალაზეც არის დამოკიდებული.',
+            'wall_included' => 'ფასში შედის',
             'extras' => 'დამატებით',
             'ceiling' => 'ფირი და მონტაჟი',
             'minimum' => 'მინიმალური ღირებულება',

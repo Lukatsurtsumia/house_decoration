@@ -195,12 +195,15 @@ if (heroSlideshow) {
     restartProgress();
 }
 
-// Calculator: rooms are measured by length x width; the price follows the finish and add-ons.
+// Calculator: rooms are measured by length x width; the price follows the finish, wall type and add-ons.
 const calculator = document.querySelector('[data-calculator]');
 
 if (calculator) {
-    const { currency, minimum, finishes, extras, perimeter, dimensions, maxRooms, labels } = JSON.parse(calculator.dataset.calculatorConfig);
+    const { currency, minimum, finishes, walls, extras, perimeter, dimensions, maxRooms, labels } = JSON.parse(
+        calculator.dataset.calculatorConfig,
+    );
     const finishKeys = Object.keys(finishes);
+    const wallKeys = Object.keys(walls);
     const extraKeys = Object.keys(extras);
     const perimeterKeys = Object.keys(perimeter);
 
@@ -210,6 +213,7 @@ if (calculator) {
     const areaOutput = calculator.querySelector('[data-calc-area]');
     const perimeterOutput = calculator.querySelector('[data-calc-perimeter-length]');
     const finishInputs = Array.from(calculator.querySelectorAll('[data-calc-finish]'));
+    const wallInputs = Array.from(calculator.querySelectorAll('[data-calc-wall]'));
     const perimeterInputs = Array.from(calculator.querySelectorAll('[data-calc-perimeter]'));
     const linesBox = calculator.querySelector('[data-calc-lines]');
     const totalOutput = calculator.querySelector('[data-calc-total]');
@@ -250,6 +254,7 @@ if (calculator) {
         length: dimensions.length,
         width: dimensions.width,
         finish: finishKeys[0],
+        wall: wallKeys[0],
         extras: Object.fromEntries(extraKeys.map((key) => [key, 0])),
         perimeter: Object.fromEntries(perimeterKeys.map((key) => [key, false])),
     });
@@ -265,6 +270,7 @@ if (calculator) {
     const quoteRoom = (room) => {
         const { area, edge } = measure(room);
         const finish = finishes[room.finish];
+        const wall = walls[room.wall];
         const ceilingCost = area * finish.price;
         const lines = [
             {
@@ -273,6 +279,11 @@ if (calculator) {
                 amount: Math.max(ceilingCost, minimum),
             },
         ];
+
+        // Tile and porcelain walls add a fixing charge along the whole perimeter.
+        if (wall.price > 0) {
+            lines.push({ label: wall.name, detail: `${number.format(edge)} ${wall.unit} × ${formatMoney(wall.price)}`, amount: edge * wall.price });
+        }
 
         extraKeys.forEach((key) => {
             const quantity = room.extras[key];
@@ -429,11 +440,9 @@ if (calculator) {
                     : 'flex shrink-0 items-center rounded-lg border border-line bg-white text-ink-soft hover:border-ink/30',
             );
 
-            const select = element(
-                'button',
-                'px-3 py-1.5 text-sm font-semibold whitespace-nowrap tabular-nums',
-                `${labels.room} ${index + 1} · ${number.format(measure(room).area)} ${labels.sqm}`,
-            );
+            const select = element('button', 'px-3 py-1.5 text-sm font-semibold whitespace-nowrap tabular-nums', `${labels.room} ${index + 1}`);
+            // Phones show the name only, so a chip keeps its width while the sizes change.
+            select.append(element('span', 'hidden sm:inline', ` · ${number.format(measure(room).area)} ${labels.sqm}`));
             select.type = 'button';
             select.dataset.calcRoom = String(index);
             select.setAttribute('aria-pressed', String(isActive));
@@ -452,6 +461,26 @@ if (calculator) {
 
         roomsBox.replaceChildren(...items);
         addRoomButton.hidden = rooms.length >= maxRooms;
+        revealActiveRoom();
+    };
+
+    // On phones the chips scroll sideways: keep the active one fully in view, clear of the faded edge.
+    const revealActiveRoom = () => {
+        const chip = roomsBox.children[active];
+        if (!chip || roomsBox.scrollWidth <= roomsBox.clientWidth) return;
+
+        const box = roomsBox.getBoundingClientRect();
+        const rect = chip.getBoundingClientRect();
+        const inset = parseFloat(getComputedStyle(roomsBox).paddingLeft);
+        const hiddenLeft = box.left + inset - rect.left;
+        const hiddenRight = rect.right - (box.right - inset);
+
+        // A chip wider than the view lines up with its start.
+        if (hiddenLeft > 0 || rect.width > box.width - inset * 2) {
+            roomsBox.scrollLeft -= hiddenLeft;
+        } else if (hiddenRight > 0) {
+            roomsBox.scrollLeft += hiddenRight;
+        }
     };
 
     const fillRange = (range) => {
@@ -475,6 +504,9 @@ if (calculator) {
 
         finishInputs.forEach((input) => {
             input.checked = input.value === room.finish;
+        });
+        wallInputs.forEach((input) => {
+            input.checked = input.value === room.wall;
         });
         perimeterInputs.forEach((input) => {
             input.checked = room.perimeter[input.dataset.calcPerimeter];
@@ -563,7 +595,8 @@ if (calculator) {
         renderSummary();
     };
 
-    const focusRoom = () => roomsBox.querySelector(`[data-calc-room="${active}"]`)?.focus();
+    // renderRooms has already scrolled the chip into view, so focusing must not scroll again.
+    const focusRoom = () => roomsBox.querySelector(`[data-calc-room="${active}"]`)?.focus({ preventScroll: true });
 
     Object.entries(dimensionInputs).forEach(([dimension, input]) => {
         input.addEventListener('input', () => {
@@ -595,6 +628,13 @@ if (calculator) {
     finishInputs.forEach((input) => {
         input.addEventListener('change', () => {
             rooms[active].finish = input.value;
+            update();
+        });
+    });
+
+    wallInputs.forEach((input) => {
+        input.addEventListener('change', () => {
+            rooms[active].wall = input.value;
             update();
         });
     });
@@ -658,7 +698,7 @@ if (calculator) {
 
     pdfForm?.addEventListener('submit', () => {
         pdfForm.querySelector('[data-calc-pdf-rooms]').value = JSON.stringify(
-            rooms.map(({ length, width, finish, extras, perimeter }) => ({ length, width, finish, extras, perimeter })),
+            rooms.map(({ length, width, finish, wall, extras, perimeter }) => ({ length, width, finish, wall, extras, perimeter })),
         );
     });
 
@@ -671,6 +711,7 @@ if (calculator) {
             Object.entries(preset).forEach(([key, value]) => {
                 if (key === 'length' || key === 'width') room[key] = value;
                 if (key === 'finish' && finishes[value]) room.finish = value;
+                if (key === 'wall' && walls[value]) room.wall = value;
                 if (key in extras) room.extras[key] = Math.max(room.extras[key], value);
                 if (key in perimeter) room.perimeter[key] = Boolean(value);
             });

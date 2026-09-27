@@ -37,10 +37,26 @@ class EstimatePdfTest extends TestCase
         $this->assertSame(config('homepage.calculator.labels.minimum'), $estimate->rooms[1]['lines'][0]['note']);
     }
 
+    public function test_tile_and_porcelain_walls_are_charged_along_the_perimeter(): void
+    {
+        $estimate = Estimate::fromRooms([
+            $this->room(),
+            $this->room(['wall' => 'plaster']),
+            $this->room(['wall' => 'tile']),
+            $this->room(['wall' => 'porcelain']),
+        ], config('homepage.pricing'), config('homepage.calculator.labels'));
+
+        // Each room has 17 m of wall: plain walls add nothing, tile adds 17 × 3 ₾, porcelain 17 × 6 ₾.
+        $this->assertSame([378.0, 378.0, 429.0, 480.0], array_column($estimate->rooms, 'total'));
+        $this->assertCount(1, $estimate->rooms[1]['lines']);
+        $this->assertSame(config('homepage.pricing.walls.tile.name'), $estimate->rooms[2]['lines'][1]['label']);
+        $this->assertSame(17.0, $estimate->rooms[2]['lines'][1]['quantity']);
+    }
+
     public function test_it_downloads_the_estimate_as_a_pdf(): void
     {
         $response = $this->post(route('estimate.pdf'), [
-            'rooms' => json_encode([$this->room(['extras' => ['lights' => 4]])]),
+            'rooms' => json_encode([$this->room(['wall' => 'tile', 'extras' => ['lights' => 4]])]),
         ]);
 
         $response->assertOk();
@@ -52,10 +68,10 @@ class EstimatePdfTest extends TestCase
     public function test_it_rejects_prices_that_are_not_in_the_config(): void
     {
         $response = $this->post(route('estimate.pdf'), [
-            'rooms' => json_encode([$this->room(['finish' => 'gold', 'extras' => ['walls' => 3]])]),
+            'rooms' => json_encode([$this->room(['finish' => 'gold', 'wall' => 'marble', 'extras' => ['stars' => 3]])]),
         ]);
 
-        $response->assertSessionHasErrors(['rooms.0.finish', 'rooms.0.extras']);
+        $response->assertSessionHasErrors(['rooms.0.finish', 'rooms.0.wall', 'rooms.0.extras']);
     }
 
     public function test_it_requires_rooms(): void
