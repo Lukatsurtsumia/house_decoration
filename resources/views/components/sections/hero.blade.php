@@ -14,7 +14,7 @@
         data-hero-slideshow
         tabindex="0"
         aria-roledescription="სლაიდშოუ"
-        aria-label="გაჭიმული ჭერის ფოტოები"
+        aria-label="გასაჭიმი ჭერის ფოტოები"
         style="--slide-duration: 6s"
         class="relative flex min-h-[calc(100svh-4rem)] flex-col overflow-hidden focus:outline-none lg:h-[calc(100svh-4rem)] lg:max-h-[920px] lg:min-h-[620px]"
     >

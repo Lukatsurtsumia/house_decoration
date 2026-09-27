@@ -10,7 +10,7 @@ return [
     // the word alone is descriptive and hard to protect.
     'brand' => [
         'name' => 'Plafond',
-        'tagline' => 'გაჭიმული ჭერები თბილისში',
+        'tagline' => 'გასაჭიმი ჭერები თბილისში',
     ],
 
     'nav' => [
@@ -24,7 +24,7 @@ return [
     ],
 
     'hero' => [
-        'eyebrow' => 'გაჭიმული ჭერი · თბილისი',
+        'eyebrow' => 'გასაჭიმი ჭერი · თბილისი',
         'title' => 'ახალი ჭერი ძველის დაშლის გარეშე',
         'description' => 'ფირს ვჭიმავთ არსებული ჭერის ქვეშ, ამიტომ ბზარები, ლაქები და გაყვანილობა აღარ ჩანს. ვმუშაობთ სუფთად და ზუსტად.',
         'price_label' => 'ფასი',
@@ -35,27 +35,27 @@ return [
         'slides' => [
             [
                 'image' => 'https://images.pexels.com/photos/7005453/pexels-photo-7005453.jpeg?auto=compress&cs=tinysrgb&w=1920',
-                'alt' => 'მისაღები ოთახი გაჭიმული ჭერით და სანათი ხაზებით',
+                'alt' => 'მისაღები ოთახი გასაჭიმი ჭერით და სანათი ხაზებით',
                 'caption' => 'სანათი ხაზები მისაღებში',
             ],
             [
                 'image' => 'https://images.pexels.com/photos/7546319/pexels-photo-7546319.jpeg?auto=compress&cs=tinysrgb&w=1920',
-                'alt' => 'პრიალა თეთრი გაჭიმული ჭერი, რომელშიც ჭაღი ირეკლება',
+                'alt' => 'პრიალა თეთრი გასაჭიმი ჭერი, რომელშიც ჭაღი ირეკლება',
                 'caption' => 'პრიალა თეთრი ჭერი',
             ],
             [
                 'image' => 'https://images.pexels.com/photos/7173662/pexels-photo-7173662.jpeg?auto=compress&cs=tinysrgb&w=1920',
-                'alt' => 'მისაღები ოთახი წითელი პრიალა გაჭიმული ჭერით',
+                'alt' => 'მისაღები ოთახი წითელი პრიალა გასაჭიმი ჭერით',
                 'caption' => 'ფერადი პრიალა ჭერი',
             ],
             [
                 'image' => 'https://images.pexels.com/photos/7195891/pexels-photo-7195891.jpeg?auto=compress&cs=tinysrgb&w=1920',
-                'alt' => 'საძინებელი გაჭიმული ჭერით და კონტურული განათებით',
+                'alt' => 'საძინებელი გასაჭიმი ჭერით და კონტურული განათებით',
                 'caption' => 'კონტურული განათება საძინებელში',
             ],
             [
                 'image' => 'https://images.pexels.com/photos/6238607/pexels-photo-6238607.jpeg?auto=compress&cs=tinysrgb&w=1920',
-                'alt' => 'დერეფანი გაჭიმული ჭერით და სანათი ხაზებით',
+                'alt' => 'დერეფანი გასაჭიმი ჭერით და სანათი ხაზებით',
                 'caption' => 'სანათი ხაზები დერეფანში',
             ],
         ],

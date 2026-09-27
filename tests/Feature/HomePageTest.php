@@ -53,6 +53,14 @@ class HomePageTest extends TestCase
         $this->get('/')->assertSee('21 ₾-დან');
     }
 
+    public function test_page_calls_the_product_gasachimi_cheri(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertSee('გასაჭიმი ჭერები თბილისში');
+        $response->assertDontSee('გაჭიმული');
+    }
+
     public function test_service_cards_carry_calculator_presets(): void
     {
         $response = $this->get('/');
