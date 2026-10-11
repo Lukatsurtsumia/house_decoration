@@ -62,6 +62,33 @@ class SeoTest extends TestCase
         $this->assertSame('+995599123456', $business['telephone']);
     }
 
+    public function test_the_faq_answers_quote_current_prices(): void
+    {
+        config()->set('homepage.pricing.finishes.matte.price', 19);
+
+        $response = $this->get('/');
+        $faq = collect($this->schema()['@graph'])->firstWhere('@type', 'FAQPage');
+
+        $response->assertSee('id="faq"', false);
+        $response->assertSee('მქრქალი ჭერის კვადრატული მეტრი 19 ₾ ღირს');
+        $this->assertCount(count(config('homepage.faq.items')), $faq['mainEntity']);
+
+        foreach (\App\Support\Faq::items(config('homepage')) as $item) {
+            $this->assertDoesNotMatchRegularExpression('/\{[a-z_.]+\}/', $item['answer'], 'Unknown price in: '.$item['question']);
+        }
+    }
+
+    public function test_llms_txt_summarises_the_business_for_ai_assistants(): void
+    {
+        $response = $this->get('/llms.txt');
+
+        $response->assertOk();
+        $response->assertSee('# Plafondi', false);
+        $response->assertSee('- მქრქალი: 21 ₾ / მ²', false);
+        $response->assertSee('### რა ღირს გასაჭიმი ჭერი?', false);
+        $response->assertDontSee('+995 555 00 00 00', false);
+    }
+
     public function test_robots_txt_points_to_the_sitemap(): void
     {
         $this->get('/robots.txt')

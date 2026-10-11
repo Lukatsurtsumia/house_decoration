@@ -7,6 +7,8 @@
         <x-sections.projects :content="$content" />
         <x-sections.calculator :content="$content" />
         <x-sections.map :content="$content" />
+        <x-sections.faq :content="$content" />
+        <x-sections.contact :content="$content" />
     </main>
 
     <x-sections.footer :content="$content" />

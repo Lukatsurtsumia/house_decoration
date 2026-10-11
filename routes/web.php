@@ -9,6 +9,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/robots.txt', [SeoController::class, 'robots']);
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap']);
+Route::get('/llms.txt', [SeoController::class, 'llms']);
 
 // Building a PDF takes real CPU time, so each visitor gets a handful per minute.
 Route::post('/estimate.pdf', EstimatePdfController::class)
