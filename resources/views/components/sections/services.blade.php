@@ -30,16 +30,15 @@
                         'relative m-2 aspect-16/10 overflow-hidden rounded-xl bg-mist',
                         'md:aspect-auto md:min-h-80 md:w-1/2 md:shrink-0' => $loop->first,
                     ])>
-                        <img
-                            src="{{ $service['image'] }}"
-                            alt="{{ $service['name'] }}"
-                            loading="lazy"
-                            decoding="async"
-                            @class([
+                        <x-photo
+                            :name="$service['photo']"
+                            :photo="$content['photos'][$service['photo']]"
+                            sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw"
+                            :class="\Illuminate\Support\Arr::toCssClasses([
                                 'h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]',
                                 'md:absolute md:inset-0' => $loop->first,
-                            ])
-                        >
+                            ])"
+                        />
                         <span class="absolute top-3 left-3 rounded-md bg-white px-2 py-0.5 font-display text-sm font-semibold text-ink">
                             {{ sprintf('%02d', $i + 1) }}
                         </span>

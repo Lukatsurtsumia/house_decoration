@@ -54,7 +54,7 @@ if (navToggle && navMenu) {
     });
 
     window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024 && !navMenu.hidden) {
+        if (window.innerWidth >= 1280 && !navMenu.hidden) {
             closeMenu();
         }
     });
@@ -727,6 +727,95 @@ if (calculator) {
 
     // The area label is measured to fit the room, so measure again once the web fonts have loaded.
     document.fonts?.ready.then(() => renderPlan(rooms[active]));
+}
+
+// Projects: each card opens a full-screen viewer that steps through every photo of every project.
+const gallery = document.querySelector('[data-gallery]');
+const lightbox = document.querySelector('[data-lightbox]');
+
+if (gallery && lightbox) {
+    const slides = JSON.parse(gallery.dataset.gallerySlides);
+    const image = lightbox.querySelector('[data-lightbox-image]');
+    const stage = lightbox.querySelector('[data-lightbox-stage]');
+    const title = lightbox.querySelector('[data-lightbox-title]');
+    const meta = lightbox.querySelector('[data-lightbox-meta]');
+    const counter = lightbox.querySelector('[data-lightbox-counter]');
+
+    let current = 0;
+    let touchStartX = 0;
+
+    const wrap = (index) => (index + slides.length) % slides.length;
+
+    const show = (index) => {
+        current = wrap(index);
+        const slide = slides[current];
+
+        image.width = slide.width;
+        image.height = slide.height;
+        image.alt = slide.alt;
+
+        // Fade the new photo in once it has loaded; the same photo again has nothing to load.
+        if (image.src !== slide.src) {
+            image.classList.add('opacity-0');
+            image.src = slide.src;
+        }
+
+        title.textContent = slide.title;
+        meta.textContent = slide.meta;
+        counter.textContent = `${current + 1} / ${slides.length}`;
+
+        // Fetch the neighbours so stepping through feels instant.
+        [current - 1, current + 1].forEach((neighbour) => {
+            new Image().src = slides[wrap(neighbour)].src;
+        });
+    };
+
+    image.addEventListener('load', () => image.classList.remove('opacity-0'));
+
+    gallery.addEventListener('click', (event) => {
+        const opener = event.target.closest('[data-gallery-open]');
+        if (!opener) return;
+
+        show(Number(opener.dataset.galleryOpen));
+        lightbox.showModal();
+        document.documentElement.style.overflow = 'hidden';
+    });
+
+    lightbox.addEventListener('close', () => {
+        document.documentElement.style.overflow = '';
+    });
+
+    lightbox.addEventListener('click', (event) => {
+        const step = event.target.closest('[data-lightbox-step]');
+
+        if (step) {
+            show(current + Number(step.dataset.lightboxStep));
+        } else if (event.target.closest('[data-lightbox-close]') || event.target === stage) {
+            lightbox.close();
+        }
+    });
+
+    lightbox.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') show(current - 1);
+        if (event.key === 'ArrowRight') show(current + 1);
+    });
+
+    stage.addEventListener(
+        'touchstart',
+        (event) => {
+            touchStartX = event.changedTouches[0].clientX;
+        },
+        { passive: true },
+    );
+
+    stage.addEventListener(
+        'touchend',
+        (event) => {
+            const delta = event.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(delta) > 40) show(current + (delta < 0 ? 1 : -1));
+        },
+        { passive: true },
+    );
 }
 
 const mapElement = document.querySelector('[data-map]');

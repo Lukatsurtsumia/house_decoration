@@ -41,6 +41,18 @@
         translate: 0 0;
     }
 
+    /* The project photo viewer fades in. */
+    [data-lightbox][open],
+    [data-lightbox][open]::backdrop {
+        animation: lightbox-in 0.2s ease-out;
+    }
+
+    @keyframes lightbox-in {
+        from {
+            opacity: 0;
+        }
+    }
+
     /* Slow zoom on the visible hero photo. */
     [data-slide].is-active img {
         animation: hero-zoom calc(var(--slide-duration, 6s) + 1.5s) ease-out forwards;

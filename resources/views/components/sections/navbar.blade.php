@@ -11,12 +11,12 @@
             </span>
         </a>
 
-        <nav class="hidden items-center gap-8 lg:flex" aria-label="მთავარი ნავიგაცია">
+        <nav class="hidden items-center gap-8 xl:flex" aria-label="მთავარი ნავიგაცია">
             @foreach ($content['nav']['items'] as $item)
                 <a
                     href="{{ $item['href'] }}"
                     data-nav-link
-                    class="relative py-1 text-sm font-medium text-ink-soft transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:scale-x-0 after:rounded-full after:bg-jade after:transition-transform hover:text-ink aria-[current=true]:text-ink aria-[current=true]:after:scale-x-100"
+                    class="relative py-1 text-sm font-medium whitespace-nowrap text-ink-soft transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:scale-x-0 after:rounded-full after:bg-jade after:transition-transform hover:text-ink aria-[current=true]:text-ink aria-[current=true]:after:scale-x-100"
                 >
                     {{ $item['label'] }}
                 </a>
@@ -26,7 +26,7 @@
         <div class="flex items-center gap-2">
             <a
                 href="#contact"
-                class="hidden rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-ink-soft sm:inline-flex"
+                class="hidden rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-ink-soft sm:inline-flex"
             >
                 {{ $content['nav']['cta'] }}
             </a>
@@ -36,7 +36,7 @@
                 data-nav-toggle
                 aria-expanded="false"
                 aria-controls="mobile-nav-menu"
-                class="inline-flex size-10 items-center justify-center rounded-lg border border-line text-ink transition-colors hover:bg-mist lg:hidden"
+                class="inline-flex size-10 items-center justify-center rounded-lg border border-line text-ink transition-colors hover:bg-mist xl:hidden"
             >
                 <span class="sr-only">მენიუს გახსნა/დახურვა</span>
                 <x-icon name="menu" data-nav-icon-open />
@@ -49,7 +49,7 @@
         id="mobile-nav-menu"
         data-nav-menu
         hidden
-        class="absolute inset-x-0 top-full -translate-y-2 border-b border-line bg-white opacity-0 shadow-lg transition-all duration-200 lg:hidden"
+        class="absolute inset-x-0 top-full -translate-y-2 border-b border-line bg-white opacity-0 shadow-lg transition-all duration-200 xl:hidden"
     >
         <nav class="flex flex-col px-4 py-3" aria-label="მობილური ნავიგაცია">
             @foreach ($content['nav']['items'] as $item)
@@ -67,5 +67,5 @@
 <div
     data-nav-backdrop
     hidden
-    class="fixed inset-0 z-40 bg-ink/30 opacity-0 transition-opacity duration-200 lg:hidden"
+    class="fixed inset-0 z-40 bg-ink/30 opacity-0 transition-opacity duration-200 xl:hidden"
 ></div>

@@ -17,6 +17,12 @@
         @case('arrow-right')
             <path d="M5 12h14M13 6l6 6-6 6" />
             @break
+        @case('arrow-left')
+            <path d="M19 12H5M11 6l-6 6 6 6" />
+            @break
+        @case('photos')
+            <rect x="3" y="5" width="14" height="14" rx="2" /><path d="M7 2h12a2 2 0 0 1 2 2v12" /><path d="m3 16 4-4 4 4 2-2 4 4" />
+            @break
         @case('download')
             <path d="M12 4v11M7 10l5 5 5-5" /><path d="M5 20h14" />
             @break

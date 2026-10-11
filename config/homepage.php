@@ -16,6 +16,7 @@ return [
     'nav' => [
         'items' => [
             ['label' => 'სერვისები', 'href' => '#services'],
+            ['label' => 'ნამუშევრები', 'href' => '#projects'],
             ['label' => 'ფასის დათვლა', 'href' => '#calculator'],
             ['label' => 'არეალი', 'href' => '#area'],
             ['label' => 'კონტაქტი', 'href' => '#contact'],
@@ -61,31 +62,93 @@ return [
         ],
     ],
 
+    // Photos of our own work, used by the service cards and the projects gallery. Each one lives in
+    // public/images/projects as <key>.webp (up to 1200px wide) and, when wider than 600px, <key>-sm.webp.
+    'photos' => [
+        'concrete-room-1' => ['width' => 1200, 'height' => 1600, 'alt' => 'მქრქალი თეთრი ჭერი სანათი ხაზებით ბეტონის კედლებიან ოთახში'],
+        'concrete-room-2' => ['width' => 1200, 'height' => 1600, 'alt' => 'იგივე ჭერი მეორე კუთხიდან: სანათი ხაზები კედლებთან ახლოს'],
+        'hallway-light-lines' => ['width' => 1170, 'height' => 1560, 'alt' => 'დერეფნის ჭერი გრძელი სანათი ხაზებით, ტრეკული სანათებით და სპოტებით'],
+        'living-room-tracks' => ['width' => 1170, 'height' => 1560, 'alt' => 'მისაღების მქრქალი ჭერი ჩაშენებული ტრეკული სანათებით და ჭაღით'],
+        'white-room-shadow-gap' => ['width' => 800, 'height' => 999, 'alt' => 'თეთრი ოთახი, სადაც ჭერსა და კედლებს შორის ჩრდილოვანი ღრიჭო გადის'],
+        'shadow-gap-wall' => ['width' => 413, 'height' => 743, 'alt' => 'ჩრდილოვანი ღრიჭო ჭერსა და კედელს შორის, ახლო ხედი'],
+        'shadow-gap-corner' => ['width' => 512, 'height' => 327, 'alt' => 'ჩრდილოვანი პროფილი კედლის გარე კუთხეზე'],
+        'l-shaped-light-line' => ['width' => 1170, 'height' => 878, 'alt' => 'მქრქალი ჭერი კუთხოვანი სანათი ხაზით კედლების გასწვრივ'],
+        'light-lines-and-spots' => ['width' => 480, 'height' => 640, 'alt' => 'ჭერი გეომეტრიული სანათი ხაზებით, სპოტებით და კონტურული განათებით'],
+    ],
+
+    'projects' => [
+        'eyebrow' => 'ნამუშევრები',
+        'title' => 'ჩვენი შესრულებული პროექტები',
+        'description' => 'ფოტოები ჩვენი ობიექტებიდან. დააჭირეთ პროექტს და ფოტოებს დიდ ზომაში ნახავთ.',
+        'labels' => [
+            'photos' => 'ფოტო',
+            'open' => 'ფოტოების ნახვა',
+            'viewer' => 'პროექტის ფოტოები',
+            'close' => 'დახურვა',
+            'previous' => 'წინა ფოტო',
+            'next' => 'შემდეგი ფოტო',
+        ],
+        // `photos` are keys of the `photos` list above; the first one is the cover.
+        'items' => [
+            [
+                'title' => 'სანათი ხაზები ბეტონის ინტერიერში',
+                'tags' => ['მქრქალი ჭერი', 'სანათი ხაზები'],
+                'photos' => ['concrete-room-1', 'concrete-room-2'],
+            ],
+            [
+                'title' => 'გრძელი სანათი ხაზები დერეფანში',
+                'tags' => ['სანათი ხაზები', 'ტრეკული სანათები', 'სპოტები'],
+                'photos' => ['hallway-light-lines'],
+            ],
+            [
+                'title' => 'მისაღები ჩაშენებული ტრეკებით',
+                'tags' => ['მქრქალი ჭერი', 'ტრეკული სანათები'],
+                'photos' => ['living-room-tracks'],
+            ],
+            [
+                'title' => 'თეთრი ოთახი ჩრდილოვანი პროფილით',
+                'tags' => ['მქრქალი ჭერი', 'ჩრდილოვანი პროფილი'],
+                'photos' => ['white-room-shadow-gap', 'shadow-gap-wall', 'shadow-gap-corner'],
+            ],
+            [
+                'title' => 'კუთხოვანი სანათი ხაზი',
+                'tags' => ['მქრქალი ჭერი', 'სანათი ხაზი'],
+                'photos' => ['l-shaped-light-line'],
+            ],
+            [
+                'title' => 'სანათი ხაზები და სპოტები',
+                'tags' => ['სანათი ხაზები', 'სპოტები', 'კონტურული განათება'],
+                'photos' => ['light-lines-and-spots'],
+            ],
+        ],
+    ],
+
     'services' => [
         'eyebrow' => 'სერვისები',
         'title' => 'ყველაფერი ახალი ჭერისთვის',
         'subtitle' => 'თითოეული სამუშაოს ფასი წინასწარ იცით, ჭერის მონტაჟიდან განათებამდე. საბოლოო თანხას აზომვის შემდეგ ერთად დავაზუსტებთ.',
         'cta' => 'დათვლა',
-        // `prices` are paths inside `pricing`; `preset` is applied to the calculator when the card's button is clicked.
+        // `photo` is a key of `photos`; `prices` are paths inside `pricing`; `preset` is applied to the
+        // calculator when the card's button is clicked.
         'items' => [
             [
                 'name' => 'ჭერი ნებისმიერ ოთახში',
                 'description' => 'მისაღები, საძინებელი, აბაზანა თუ სამზარეულო. ორთქლი და ტენი ფირს არ აზიანებს, ფასი კი მოიცავს ფირს, პროფილს და მონტაჟს. კაფელზე ან კერამო-გრანიტზე დამაგრება ცალკე ითვლება, კედლის სიგრძით. პატარა ოთახებზე მოქმედებს მინიმალური ღირებულება.',
-                'image' => 'https://images.pexels.com/photos/6970048/pexels-photo-6970048.jpeg?auto=compress&cs=tinysrgb&w=1400',
+                'photo' => 'concrete-room-2',
                 'prices' => ['finishes.matte', 'finishes.satin', 'finishes.gloss', 'minimum', 'walls.tile', 'walls.porcelain'],
                 'preset' => [],
             ],
             [
                 'name' => 'სანათები და კვანძები',
                 'description' => 'სპოტებისა და ჭაღის ადგილებს, მილებსა და სავენტილაციო ხვრელებს მონტაჟისას ვამზადებთ.',
-                'image' => 'https://images.pexels.com/photos/7545494/pexels-photo-7545494.jpeg?auto=compress&cs=tinysrgb&w=1000',
+                'photo' => 'hallway-light-lines',
                 'prices' => ['extras.lights', 'extras.pipes', 'extras.corners'],
                 'preset' => ['lights' => 4],
             ],
             [
                 'name' => 'პროფილები და ნიშები',
                 'description' => 'ჩრდილოვანი ღრიჭო კედელთან და ფარული ნიშა ფარდისთვის ოთახს უფრო სუფთა, თანამედროვე იერს აძლევს.',
-                'image' => 'https://images.pexels.com/photos/13235831/pexels-photo-13235831.jpeg?auto=compress&cs=tinysrgb&w=1000',
+                'photo' => 'white-room-shadow-gap',
                 'prices' => ['perimeter.shadow', 'extras.curtain'],
                 'preset' => ['shadow' => true, 'curtain' => 3],
             ],

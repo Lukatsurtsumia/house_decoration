@@ -12,8 +12,47 @@ class HomePageTest extends TestCase
 
         $response->assertOk();
 
-        foreach (['home', 'services', 'calculator', 'area', 'contact', 'map'] as $id) {
+        foreach (['home', 'services', 'projects', 'calculator', 'area', 'contact', 'map'] as $id) {
             $response->assertSee('id="'.$id.'"', false);
+        }
+    }
+
+    public function test_projects_show_their_titles_and_cover_photos(): void
+    {
+        $response = $this->get('/');
+
+        foreach (config('homepage.projects.items') as $project) {
+            $response->assertSee($project['title']);
+            $response->assertSee('images/projects/'.$project['photos'][0].'.webp', false);
+        }
+    }
+
+    public function test_cards_and_projects_only_use_listed_photos(): void
+    {
+        $photos = config('homepage.photos');
+
+        foreach (config('homepage.projects.items') as $project) {
+            foreach ($project['photos'] as $name) {
+                $this->assertArrayHasKey($name, $photos);
+            }
+        }
+
+        foreach (config('homepage.services.items') as $service) {
+            $this->assertArrayHasKey($service['photo'], $photos);
+        }
+    }
+
+    public function test_every_photo_file_exists_at_its_listed_size(): void
+    {
+        foreach (config('homepage.photos') as $name => $photo) {
+            $path = public_path("images/projects/{$name}.webp");
+
+            $this->assertFileExists($path);
+            $this->assertSame([$photo['width'], $photo['height']], array_slice(getimagesize($path), 0, 2), $name);
+
+            if ($photo['width'] > 600) {
+                $this->assertSame(600, getimagesize(public_path("images/projects/{$name}-sm.webp"))[0], $name);
+            }
         }
     }
 

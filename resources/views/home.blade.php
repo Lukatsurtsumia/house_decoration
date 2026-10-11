@@ -4,6 +4,7 @@
     <main>
         <x-sections.hero :content="$content" />
         <x-sections.services :content="$content" />
+        <x-sections.projects :content="$content" />
         <x-sections.calculator :content="$content" />
         <x-sections.map :content="$content" />
     </main>
