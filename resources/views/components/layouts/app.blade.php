@@ -6,8 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <title>{{ $content['brand']['name'] }} | {{ $content['brand']['tagline'] }}</title>
-        <meta name="description" content="{{ $content['hero']['description'] }}">
+        <x-seo :content="$content" />
 
         @fonts
 

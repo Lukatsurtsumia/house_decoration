@@ -73,6 +73,8 @@
             @endforeach
         </ul>
 
-        <p class="text-xs text-muted lg:col-span-12">{{ $contact['demo_note'] }}</p>
+        @if ($contact['placeholder'] ?? false)
+            <p class="text-xs text-muted lg:col-span-12">{{ $contact['demo_note'] }}</p>
+        @endif
     </div>
 </section>

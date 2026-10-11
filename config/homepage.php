@@ -13,6 +13,19 @@ return [
         'tagline' => 'გასაჭიმი ჭერები თბილისში',
     ],
 
+    // What Google shows in its results and what Facebook, Messenger and Viber show for a shared
+    // link. The title and description lead with the words people search for ("გასაჭიმი ჭერი",
+    // "ფასი"); :price is replaced with the cheapest finish. The preview image is drawn with that
+    // price too, so redraw public/images/og-image.jpg when it changes.
+    'seo' => [
+        'title' => 'გასაჭიმი ჭერები თბილისში: ფასები და მონტაჟი',
+        'description' => 'გასაჭიმი ჭერის მონტაჟი თბილისში, მცხეთასა და რუსთავში. მქრქალი, სატინი და პრიალა ჭერი :price-დან მ²-ზე. დაითვალეთ ფასი ონლაინ და დაჯავშნეთ უფასო აზომვა.',
+        'image' => ['path' => 'images/og-image.jpg', 'width' => 1200, 'height' => 630],
+        'logo' => 'images/logo.png',
+        // Matches contact.hours; used in the business details Google reads.
+        'opening_hours' => ['opens' => '10:00', 'closes' => '19:00'],
+    ],
+
     'nav' => [
         'items' => [
             ['label' => 'სერვისები', 'href' => '#services'],
@@ -25,7 +38,8 @@ return [
     ],
 
     'hero' => [
-        'eyebrow' => 'გასაჭიმი ჭერი · თბილისი',
+        // Part of the page's main heading, so it carries the words people search for.
+        'eyebrow' => 'გასაჭიმი ჭერები · თბილისი',
         'title' => 'ახალი ჭერი ძველის დაშლის გარეშე',
         'description' => 'ფირს ვჭიმავთ არსებული ჭერის ქვეშ, ამიტომ ბზარები, ლაქები და გაყვანილობა აღარ ჩანს. ვმუშაობთ სუფთად და ზუსტად.',
         'price_label' => 'ფასი',
@@ -125,7 +139,7 @@ return [
 
     'services' => [
         'eyebrow' => 'სერვისები',
-        'title' => 'ყველაფერი ახალი ჭერისთვის',
+        'title' => 'ყველაფერი გასაჭიმი ჭერისთვის',
         'subtitle' => 'თითოეული სამუშაოს ფასი წინასწარ იცით, ჭერის მონტაჟიდან განათებამდე. საბოლოო თანხას აზომვის შემდეგ ერთად დავაზუსტებთ.',
         'cta' => 'დათვლა',
         // `photo` is a key of `photos`; `prices` are paths inside `pricing`; `preset` is applied to the
@@ -194,7 +208,7 @@ return [
     ],
 
     'calculator' => [
-        'eyebrow' => 'კალკულატორი',
+        'eyebrow' => 'გასაჭიმი ჭერის ფასი',
         'title' => 'ჩაწერეთ ოთახის ზომები და ნახეთ ფასი',
         'description' => 'ფასი ითვლება სიგრძითა და სიგანით. რამდენიმე ოთახისთვის დაამატეთ თითოეული და ჯამს ერთად ნახავთ.',
         // Sliders cover min..max meters; larger sizes can still be typed, up to input_max.
@@ -259,8 +273,10 @@ return [
         ],
     ],
 
-    // Placeholder contact details: replace with the real ones before launch.
+    // Placeholder contact details: replace them with the real ones and set `placeholder` to false.
+    // While it is true the page says the details are temporary and Google is not given them.
     'contact' => [
+        'placeholder' => true,
         'eyebrow' => 'კონტაქტი',
         'title' => 'როდის გეწვიოთ?',
         'description' => 'დარეკეთ ან მოგვწერეთ და აირჩიეთ თქვენთვის მოსახერხებელი დღე. მოვალთ, ავზომავთ ოთახს და ზუსტ ფასს იქვე გეტყვით. აზომვა უფასოა და არაფერს გავალდებულებს.',

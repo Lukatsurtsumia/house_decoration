@@ -41,13 +41,15 @@
 
         <div class="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-4 pt-16 pb-36 sm:px-6 lg:px-8 lg:pb-32">
             <div data-reveal class="max-w-2xl text-white">
-                <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold ring-1 ring-white/25 backdrop-blur">
-                    <span class="size-1.5 rounded-full bg-jade"></span>
-                    {{ $hero['eyebrow'] }}
-                </p>
-
-                <h1 class="mt-5 font-display text-4xl leading-[1.15] font-semibold text-balance sm:text-5xl lg:text-6xl">
-                    {{ $hero['title'] }}
+                {{-- The label belongs to the heading, so the main heading names what we do ("გასაჭიმი ჭერები"). --}}
+                <h1>
+                    <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold ring-1 ring-white/25 backdrop-blur">
+                        <span class="size-1.5 rounded-full bg-jade"></span>
+                        {{ $hero['eyebrow'] }}
+                    </span>
+                    <span class="mt-5 block font-display text-4xl leading-[1.15] font-semibold text-balance sm:text-5xl lg:text-6xl">
+                        {{ $hero['title'] }}
+                    </span>
                 </h1>
 
                 <p class="mt-5 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">

@@ -1,0 +1,99 @@
+@props(['content'])
+
+{{-- Search results, link previews and the business details Google reads (schema.org JSON-LD). --}}
+@php
+    $brand = $content['brand'];
+    $seo = $content['seo'];
+    $pricing = $content['pricing'];
+    $contact = $content['contact'];
+    $area = $content['area'];
+
+    $home = rtrim(config('app.url'), '/').'/';
+    $cheapest = collect($pricing['finishes'])->min('price');
+    $title = $seo['title'].' | '.$brand['name'];
+    $description = str_replace(':price', $cheapest.' '.$pricing['currency'], $seo['description']);
+    $image = asset($seo['image']['path']);
+    $mainCity = collect($area['cities'])->firstWhere('main', true) ?? $area['cities'][0];
+
+    $business = [
+        '@type' => 'HomeAndConstructionBusiness',
+        '@id' => $home.'#business',
+        'name' => $brand['name'],
+        'description' => $description,
+        'url' => $home,
+        'logo' => asset($seo['logo']),
+        'image' => array_merge([$image], array_map(
+            fn (string $name) => asset("images/projects/{$name}.webp"),
+            array_keys($content['photos']),
+        )),
+        'priceRange' => collect($pricing['finishes'])->min('price').'-'.collect($pricing['finishes'])->max('price').' '.$pricing['currency'].' / მ²',
+        'currenciesAccepted' => 'GEL',
+        'address' => ['@type' => 'PostalAddress', 'addressLocality' => $mainCity['name'], 'addressCountry' => 'GE'],
+        'geo' => ['@type' => 'GeoCoordinates', 'latitude' => $mainCity['lat'], 'longitude' => $mainCity['lng']],
+        'areaServed' => array_map(fn (array $city) => ['@type' => 'City', 'name' => $city['name']], $area['cities']),
+        'openingHoursSpecification' => [[
+            '@type' => 'OpeningHoursSpecification',
+            'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            'opens' => $seo['opening_hours']['opens'],
+            'closes' => $seo['opening_hours']['closes'],
+        ]],
+        'hasOfferCatalog' => [
+            '@type' => 'OfferCatalog',
+            'name' => $seo['title'],
+            'itemListElement' => array_values(array_map(fn (array $finish) => [
+                '@type' => 'Offer',
+                'itemOffered' => ['@type' => 'Service', 'name' => 'გასაჭიმი ჭერი, '.$finish['name']],
+                'priceSpecification' => [
+                    '@type' => 'UnitPriceSpecification',
+                    'price' => $finish['price'],
+                    'priceCurrency' => 'GEL',
+                    'unitText' => $finish['unit'],
+                ],
+            ], $pricing['finishes'])),
+        ],
+    ];
+
+    // Made-up contact details must never reach Google.
+    if (! ($contact['placeholder'] ?? false)) {
+        $business['telephone'] = preg_replace('/\s+/', '', $contact['phone']);
+        $business['email'] = $contact['email'];
+    }
+
+    $schema = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => 'WebSite',
+                '@id' => $home.'#website',
+                'url' => $home,
+                'name' => $brand['name'],
+                'alternateName' => parse_url($home, PHP_URL_HOST),
+                'inLanguage' => 'ka',
+                'publisher' => ['@id' => $home.'#business'],
+            ],
+            $business,
+        ],
+    ];
+@endphp
+
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $description }}">
+<link rel="canonical" href="{{ $home }}">
+
+<link rel="icon" href="{{ asset('favicon.ico') }}" sizes="48x48">
+<link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ka_GE">
+<meta property="og:site_name" content="{{ $brand['name'] }}">
+<meta property="og:url" content="{{ $home }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:image" content="{{ $image }}">
+<meta property="og:image:width" content="{{ $seo['image']['width'] }}">
+<meta property="og:image:height" content="{{ $seo['image']['height'] }}">
+<meta property="og:image:alt" content="{{ $brand['name'] }}: {{ $brand['tagline'] }}">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_PRETTY_PRINT) !!}</script>
