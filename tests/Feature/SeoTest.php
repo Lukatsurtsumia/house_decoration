@@ -31,7 +31,14 @@ class SeoTest extends TestCase
         $response->assertSee('<meta name="description" content="გასაჭიმი ჭერის მონტაჟი', false);
         $response->assertSee('21 ₾-დან მ²-ზე', false);
         $response->assertSee('<link rel="canonical" href="https://plafondi.com/">', false);
-        $response->assertSee('<meta property="og:image" content="'.asset('images/og-image.jpg').'">', false);
+        $response->assertSee('<meta property="og:image" content="'.asset('images/og-image.jpg').'?v=', false);
+    }
+
+    public function test_icon_links_change_when_the_icon_changes(): void
+    {
+        $version = substr(md5_file(public_path('favicon.ico')), 0, 8);
+
+        $this->get('/')->assertSee('<link rel="icon" href="'.asset('favicon.ico').'?v='.$version.'" sizes="48x48">', false);
     }
 
     public function test_the_main_heading_names_the_product(): void

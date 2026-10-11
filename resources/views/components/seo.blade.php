@@ -12,7 +12,10 @@
     $cheapest = collect($pricing['finishes'])->min('price');
     $title = $seo['title'].' | '.$brand['name'];
     $description = str_replace(':price', $cheapest.' '.$pricing['currency'], $seo['description']);
-    $image = asset($seo['image']['path']);
+    // Icons and the preview image get a version from their content, so browsers, Cloudflare and
+    // Facebook fetch a new file as soon as it changes instead of showing a cached old one.
+    $versioned = fn (string $path) => asset($path).'?v='.substr(md5_file(public_path($path)), 0, 8);
+    $image = $versioned($seo['image']['path']);
     $mainCity = collect($area['cities'])->firstWhere('main', true) ?? $area['cities'][0];
 
     $business = [
@@ -21,7 +24,7 @@
         'name' => $brand['name'],
         'description' => $description,
         'url' => $home,
-        'logo' => asset($seo['logo']),
+        'logo' => $versioned($seo['logo']),
         'image' => array_merge([$image], array_map(
             fn (string $name) => asset("images/projects/{$name}.webp"),
             array_keys($content['photos']),
@@ -90,9 +93,9 @@
 <meta name="description" content="{{ $description }}">
 <link rel="canonical" href="{{ $home }}">
 
-<link rel="icon" href="{{ asset('favicon.ico') }}" sizes="48x48">
-<link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
-<link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+<link rel="icon" href="{{ $versioned('favicon.ico') }}" sizes="48x48">
+<link rel="icon" href="{{ $versioned('favicon.svg') }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ $versioned('apple-touch-icon.png') }}">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ka_GE">
