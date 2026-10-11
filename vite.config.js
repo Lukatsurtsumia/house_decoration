@@ -17,7 +17,7 @@ export default defineConfig({
                     weights: [500, 600],
                     subsets: ['georgian'],
                 }),
-                // Latin letters and digits in serif text, e.g. the "Plafond" wordmark and prices.
+                // Latin letters and digits in serif text, e.g. the "Plafondi" wordmark and prices.
                 bunny('Noto Serif', {
                     weights: [500, 600],
                     subsets: ['latin'],

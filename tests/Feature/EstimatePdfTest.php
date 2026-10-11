@@ -61,7 +61,7 @@ class EstimatePdfTest extends TestCase
 
         $response->assertOk();
         $response->assertHeader('Content-Type', 'application/pdf');
-        $this->assertStringContainsString('attachment; filename="plafond-estimate-', $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('attachment; filename="plafondi-estimate-', $response->headers->get('Content-Disposition'));
         $this->assertStringStartsWith('%PDF-', $response->getContent());
     }
 

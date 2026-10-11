@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 #
-# Production image for the Plafond site (Laravel 13 + Vite/Tailwind).
+# Production image for the Plafondi site (Laravel 13 + Vite/Tailwind).
 # Coolify builds it from the GitHub repo; nginx + php-fpm serve it on port 8080.
 # No database: sessions, cache and the PDF rate limit live on files inside the container.
 

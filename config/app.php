@@ -56,6 +56,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Old Addresses
+    |--------------------------------------------------------------------------
+    |
+    | Hosts that still reach the site but should send visitors to APP_URL, e.g.
+    | REDIRECT_HOSTS="www.plafondi.com,plafond.arte-company.com" (comma separated).
+    |
+    */
+
+    'redirect_hosts' => array_values(array_filter(array_map(
+        fn (string $host) => strtolower(trim($host)),
+        explode(',', (string) env('REDIRECT_HOSTS', '')),
+    ))),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

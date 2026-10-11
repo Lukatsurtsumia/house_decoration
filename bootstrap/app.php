@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RedirectOldHosts;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // only receives plain HTTP. Trusting the forwarded headers lets Laravel see the original
         // HTTPS request, so URLs, redirects and secure cookies use https.
         $middleware->trustProxies(at: '*');
+
+        $middleware->append(RedirectOldHosts::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

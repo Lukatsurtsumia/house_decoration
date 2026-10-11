@@ -6,10 +6,10 @@
 
 return [
 
-    // "Plafond" is French for ceiling. Register it with the logo as one combined mark:
-    // the word alone is descriptive and hard to protect.
+    // "Plafondi" is the French "plafond" (ceiling) with a Georgian ending. Register it with the
+    // logo as one combined mark: a word this close to "ceiling" is hard to protect on its own.
     'brand' => [
-        'name' => 'Plafond',
+        'name' => 'Plafondi',
         'tagline' => 'გასაჭიმი ჭერები თბილისში',
     ],
 
@@ -242,7 +242,7 @@ return [
                 'ფასი მოიცავს ფირს, პროფილს და მონტაჟს.',
             ],
             'contact_title' => 'აზომვის დასაჯავშნად დაგვიკავშირდით',
-            'filename' => 'plafond-estimate',
+            'filename' => 'plafondi-estimate',
         ],
     ],
 
