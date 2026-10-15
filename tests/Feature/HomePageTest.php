@@ -12,9 +12,35 @@ class HomePageTest extends TestCase
 
         $response->assertOk();
 
-        foreach (['home', 'services', 'projects', 'calculator', 'area', 'contact', 'map'] as $id) {
+        foreach (['home', 'results', 'services', 'projects', 'calculator', 'area', 'faq', 'contact', 'map'] as $id) {
             $response->assertSee('id="'.$id.'"', false);
         }
+    }
+
+    public function test_before_and_after_photos_and_videos_are_shown(): void
+    {
+        $response = $this->get('/');
+        $section = config('homepage.transformation');
+
+        foreach ($section['pairs'] as $pair) {
+            $response->assertSeeInOrder([
+                'data-compare',
+                'images/projects/'.$pair['before'].'.webp',
+                'images/projects/'.$pair['after'].'.webp',
+                $pair['title'],
+            ], false);
+        }
+
+        foreach ($section['videos'] as $video) {
+            $response->assertSee('videos/'.$video['file'].'.mp4', false);
+            $this->assertFileExists(public_path('videos/'.$video['file'].'.mp4'));
+            $this->assertFileExists(public_path('videos/'.$video['file'].'.webp'));
+        }
+
+        // Silent, inline and not loaded before it is needed.
+        $response->assertSee('muted', false);
+        $response->assertSee('playsinline', false);
+        $response->assertSee('preload="none"', false);
     }
 
     public function test_projects_show_their_titles_and_cover_photos(): void

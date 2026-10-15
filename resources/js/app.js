@@ -753,6 +753,115 @@ if (calculator) {
     document.fonts?.ready.then(() => renderPlan(rooms[active]));
 }
 
+// Before/after: each photo wipes from the bare ceiling to the finished one once it is well in view;
+// the buttons, or a tap on the photo, switch back and forth.
+const comparisons = Array.from(document.querySelectorAll('[data-compare]'));
+
+// The "after" photo sits under the wipe, so fetch it now and wait until it can be drawn: on a slow
+// connection the wipe would otherwise uncover an empty frame.
+const afterPhotoReady = (figure) => {
+    const image = figure.querySelector('[data-compare-after] img');
+    if (!image || (image.complete && image.naturalWidth)) return Promise.resolve();
+
+    image.loading = 'eager';
+    return image.decode().catch(() => {});
+};
+
+comparisons.forEach((figure) => {
+    const buttons = Array.from(figure.querySelectorAll('[data-compare-show]'));
+
+    const show = async (state) => {
+        if (figure.dataset.state === state) return;
+        if (state === 'after') await afterPhotoReady(figure);
+
+        figure.dataset.state = state;
+        buttons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.compareShow === state)));
+
+        // Light up the moving edge only while the wipe runs.
+        if (!prefersReducedMotion) {
+            figure.dataset.wiping = '';
+            window.clearTimeout(figure.wipeTimer);
+            figure.wipeTimer = window.setTimeout(() => delete figure.dataset.wiping, 1000);
+        }
+    };
+
+    buttons.forEach((button) =>
+        button.addEventListener('click', () => {
+            figure.dataset.touched = '';
+            show(button.dataset.compareShow);
+        }),
+    );
+
+    figure.querySelector('[data-compare-toggle]')?.addEventListener('click', () => {
+        figure.dataset.touched = '';
+        show(figure.dataset.state === 'after' ? 'before' : 'after');
+    });
+
+    figure.revealAfter = () => {
+        if (!('touched' in figure.dataset)) show('after');
+    };
+});
+
+if (comparisons.length && 'IntersectionObserver' in window && !prefersReducedMotion) {
+    const compareObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+
+                compareObserver.unobserve(entry.target);
+                afterPhotoReady(entry.target);
+                // A moment on the "before" first, so the change is noticed.
+                window.setTimeout(() => entry.target.revealAfter(), 900);
+            });
+        },
+        { threshold: 0.6 },
+    );
+
+    comparisons.forEach((figure) => compareObserver.observe(figure));
+}
+
+// Short silent videos play while on screen and pause when scrolled away. The button pauses them
+// for good; with reduced motion nothing starts on its own.
+document.querySelectorAll('[data-autoplay-video]').forEach((video) => {
+    const button = video.parentElement.querySelector('[data-video-toggle]');
+    let stoppedByVisitor = prefersReducedMotion;
+    let visible = false;
+
+    const sync = () => {
+        const playing = !video.paused;
+        button.dataset.playing = String(playing);
+        button.setAttribute('aria-label', playing ? button.dataset.labelPause : button.dataset.labelPlay);
+    };
+
+    const playIfWanted = () => {
+        if (visible && !stoppedByVisitor) video.play().catch(() => {});
+    };
+
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+
+    button.addEventListener('click', () => {
+        if (video.paused) {
+            stoppedByVisitor = false;
+            video.play().catch(() => {});
+        } else {
+            stoppedByVisitor = true;
+            video.pause();
+        }
+    });
+
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(
+            ([entry]) => {
+                visible = entry.isIntersecting;
+                if (visible) playIfWanted();
+                else video.pause();
+            },
+            { threshold: 0.5 },
+        ).observe(video);
+    }
+});
+
 // Projects: each card opens a full-screen viewer that steps through every photo of every project.
 const gallery = document.querySelector('[data-gallery]');
 const lightbox = document.querySelector('[data-lightbox]');

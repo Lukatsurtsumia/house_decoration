@@ -78,3 +78,5 @@ Check `https://plafondi.com/up`, the home page, and the calculator's **PDF-áƒ˜áƒ
   `storage/fonts` is rebuilt automatically after each deploy.
 - **Photos:** the hero slideshow still uses Pexels photos. Our own work photos live in
   `public/images/projects` and are listed under `photos` in `config/homepage.php`.
+- **Videos:** short silent clips in `public/videos` (`<name>.mp4`, H.264, with a `<name>.webp`
+  poster), listed under `transformation.videos`. Keep them small: they play when scrolled into view.

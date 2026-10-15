@@ -65,6 +65,39 @@ return [
         'shadow-gap-corner' => ['alt' => 'Shadow gap profile on an outside wall corner'],
         'l-shaped-light-line' => ['alt' => 'Matte ceiling with an L-shaped light line along the walls'],
         'light-lines-and-spots' => ['alt' => 'Ceiling with geometric light lines, spotlights and perimeter lighting'],
+        'apartment-entrance-before' => ['alt' => 'Bare concrete ceiling with loose wiring, before installation'],
+        'apartment-entrance-after' => ['alt' => 'The same room with a white stretch ceiling and a chandelier, after installation'],
+        'apartment-window-before' => ['alt' => 'Concrete ceiling with wiring by the balcony door, before installation'],
+        'apartment-window-after' => ['alt' => 'White stretch ceiling with spotlights by the balcony door, after installation'],
+    ],
+
+    'transformation' => [
+        'eyebrow' => 'Before and after',
+        'title' => 'One apartment: from bare concrete to a clean white ceiling',
+        'description' => 'The same apartment before and after our work. The stretch ceiling completely hides the bare concrete and wiring, without tearing out the old ceiling.',
+        'labels' => [
+            'before' => 'Before',
+            'after' => 'After',
+            'compare' => 'Compare',
+            'play' => 'Play video',
+            'pause' => 'Pause video',
+        ],
+        'pairs' => [
+            ['title' => 'Ceiling with a chandelier'],
+            ['title' => 'Ceiling with spotlights'],
+        ],
+        'process_title' => 'How we work',
+        'steps' => [
+            ['title' => 'Free measurement', 'text' => 'We visit, measure the room and tell you the exact price on the spot.'],
+            ['title' => 'Installation', 'text' => 'We fix the profile to the walls and stretch the film. There is no need to remove the old ceiling.'],
+            ['title' => 'The result', 'text' => 'A smooth white ceiling with no cracks or wiring in sight.'],
+        ],
+        'videos' => [
+            ['title' => 'Installation in progress', 'caption' => 'Fixing the profile along the walls'],
+            ['title' => 'The finished apartment', 'caption' => 'The same apartment with stretch ceilings'],
+        ],
+        'cta_text' => 'Want a ceiling like this?',
+        'cta' => 'Book a free measurement',
     ],
 
     'projects' => [

@@ -30,9 +30,10 @@
         'description' => $description,
         'url' => $home,
         'logo' => $versioned($seo['logo']),
+        // Finished work only: the "before" photos show bare concrete.
         'image' => array_merge([$image], array_map(
             fn (string $name) => asset("images/projects/{$name}.webp"),
-            array_keys($content['photos']),
+            array_values(array_filter(array_keys($content['photos']), fn (string $name) => ! str_ends_with($name, '-before'))),
         )),
         'priceRange' => $cheapest.'-'.collect($pricing['finishes'])->max('price').' '.$pricing['currency'].' / '.collect($pricing['finishes'])->first()['unit'],
         'currenciesAccepted' => 'GEL',

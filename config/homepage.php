@@ -114,6 +114,44 @@ return [
         'shadow-gap-corner' => ['width' => 512, 'height' => 327, 'alt' => 'ჩრდილოვანი პროფილი კედლის გარე კუთხეზე'],
         'l-shaped-light-line' => ['width' => 1170, 'height' => 878, 'alt' => 'მქრქალი ჭერი კუთხოვანი სანათი ხაზით კედლების გასწვრივ'],
         'light-lines-and-spots' => ['width' => 480, 'height' => 640, 'alt' => 'ჭერი გეომეტრიული სანათი ხაზებით, სპოტებით და კონტურული განათებით'],
+        // One apartment before and after (see `transformation`).
+        'apartment-entrance-before' => ['width' => 1170, 'height' => 1560, 'alt' => 'შიშველი ბეტონის ჭერი გამოშვერილი სადენებით, მონტაჟამდე'],
+        'apartment-entrance-after' => ['width' => 1170, 'height' => 1560, 'alt' => 'იგივე ოთახი თეთრი გასაჭიმი ჭერითა და ჭაღით, მონტაჟის შემდეგ'],
+        'apartment-window-before' => ['width' => 1170, 'height' => 1560, 'alt' => 'ბეტონის ჭერი სადენებით აივნის კარის მხრიდან, მონტაჟამდე'],
+        'apartment-window-after' => ['width' => 1170, 'height' => 1560, 'alt' => 'თეთრი გასაჭიმი ჭერი სპოტებით აივნის კარის მხრიდან, მონტაჟის შემდეგ'],
+    ],
+
+    // One real apartment, start to finish: before/after photos that wipe from concrete to the finished
+    // ceiling, how we work, and two short silent videos from the same job (public/videos).
+    'transformation' => [
+        'eyebrow' => 'მანამდე და შემდეგ',
+        'title' => 'ერთი ბინა: შიშველი ბეტონიდან თეთრ ჭერამდე',
+        'description' => 'ერთი და იგივე ბინა სამუშაომდე და მის შემდეგ. შიშველი ბეტონი და სადენები გასაჭიმმა ჭერმა სრულად დაფარა, ძველი ჭერის დაშლის გარეშე.',
+        'labels' => [
+            'before' => 'მანამდე',
+            'after' => 'შემდეგ',
+            'compare' => 'შედარება',
+            'play' => 'ვიდეოს ჩართვა',
+            'pause' => 'ვიდეოს შეჩერება',
+        ],
+        // `position` picks the part of the photo shown in the square frame (the ceiling).
+        'pairs' => [
+            ['title' => 'ჭერი ჭაღით', 'before' => 'apartment-entrance-before', 'after' => 'apartment-entrance-after', 'position' => '50% 30%'],
+            ['title' => 'ჭერი სპოტებით', 'before' => 'apartment-window-before', 'after' => 'apartment-window-after', 'position' => '50% 30%'],
+        ],
+        'process_title' => 'როგორ ვმუშაობთ',
+        'steps' => [
+            ['title' => 'უფასო აზომვა', 'text' => 'მოვალთ თქვენთან, ავზომავთ ოთახს და ზუსტ ფასს იქვე გეტყვით.'],
+            ['title' => 'მონტაჟი', 'text' => 'კედლებზე პროფილს ვამაგრებთ და ფირს ვჭიმავთ. ძველი ჭერის დაშლა საჭირო არ არის.'],
+            ['title' => 'შედეგი', 'text' => 'სწორი, თეთრი ჭერი, რომელშიც ბზარები და სადენები აღარ ჩანს.'],
+        ],
+        // Files in public/videos: <file>.mp4 and the poster <file>.webp.
+        'videos' => [
+            ['file' => 'installation', 'width' => 360, 'height' => 398, 'title' => 'მონტაჟის პროცესი', 'caption' => 'პროფილს კედლების გასწვრივ ვამაგრებთ'],
+            ['file' => 'walkthrough', 'width' => 360, 'height' => 640, 'title' => 'დასრულებული ბინა', 'caption' => 'იგივე ბინა გასაჭიმი ჭერით'],
+        ],
+        'cta_text' => 'გინდათ ასეთი ჭერი?',
+        'cta' => 'უფასო აზომვის დაჯავშნა',
     ],
 
     'projects' => [
