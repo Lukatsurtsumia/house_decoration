@@ -4,8 +4,9 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Noto Sans Georgian', 'Segoe UI', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Georgian letters come from Noto Sans Georgian, Latin and Cyrillic from Noto Sans (same design). */
+    --font-sans: 'Noto Sans Georgian', 'Noto Sans', 'Segoe UI', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-display: 'Noto Serif Georgian', 'Noto Serif', Georgia, 'Times New Roman', serif;
 
     /* Charcoal + white with a single jade accent. */

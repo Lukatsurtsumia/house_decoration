@@ -60,6 +60,30 @@ if (navToggle && navMenu) {
     });
 }
 
+// Language switcher: close it on an outside click or Escape, and keep the visitor's place on the
+// page (#calculator, #faq…) when they switch language.
+const languageSwitcher = document.querySelector('[data-lang-switcher]');
+
+if (languageSwitcher) {
+    document.addEventListener('click', (event) => {
+        if (languageSwitcher.open && !languageSwitcher.contains(event.target)) languageSwitcher.open = false;
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && languageSwitcher.open) {
+            languageSwitcher.open = false;
+            languageSwitcher.querySelector('summary').focus();
+        }
+    });
+
+}
+
+document.querySelectorAll('[data-lang-link]').forEach((link) => {
+    link.addEventListener('click', () => {
+        if (window.location.hash) link.hash = window.location.hash;
+    });
+});
+
 const navbar = document.querySelector('[data-navbar]');
 
 if (navbar) {
@@ -199,7 +223,7 @@ if (heroSlideshow) {
 const calculator = document.querySelector('[data-calculator]');
 
 if (calculator) {
-    const { currency, minimum, finishes, walls, extras, perimeter, dimensions, maxRooms, labels } = JSON.parse(
+    const { currency, minimum, finishes, walls, extras, perimeter, dimensions, maxRooms, labels, intl } = JSON.parse(
         calculator.dataset.calculatorConfig,
     );
     const finishKeys = Object.keys(finishes);
@@ -229,8 +253,8 @@ if (calculator) {
         width: calculator.querySelector('[data-calc-dimension-range="width"]'),
     };
 
-    const money = new Intl.NumberFormat('ka-GE', { maximumFractionDigits: 2 });
-    const number = new Intl.NumberFormat('ka-GE', { maximumFractionDigits: 2 });
+    const money = new Intl.NumberFormat(intl, { maximumFractionDigits: 2 });
+    const number = new Intl.NumberFormat(intl, { maximumFractionDigits: 2 });
     const formatMoney = (value) => `${money.format(value)} ${currency}`;
 
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));

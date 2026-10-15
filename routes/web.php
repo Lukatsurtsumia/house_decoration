@@ -3,9 +3,13 @@
 use App\Http\Controllers\EstimatePdfController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SeoController;
+use App\Support\Content;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/{locale}', [HomeController::class, 'index'])
+    ->whereIn('locale', Content::otherLocales())
+    ->name('home.localized');
 
 Route::get('/robots.txt', [SeoController::class, 'robots']);
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap']);

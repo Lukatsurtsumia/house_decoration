@@ -7,7 +7,7 @@
             <span class="font-display text-lg font-semibold text-ink">{{ $content['brand']['name'] }}</span>
         </a>
 
-        <nav class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted" aria-label="ქვედა ნავიგაცია">
+        <nav class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted" aria-label="{{ $content['ui']['footer_nav'] }}">
             @foreach ($content['nav']['items'] as $item)
                 <a href="{{ $item['href'] }}" class="transition-colors hover:text-ink">{{ $item['label'] }}</a>
             @endforeach

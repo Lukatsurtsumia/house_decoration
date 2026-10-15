@@ -77,7 +77,7 @@ class SeoTest extends TestCase
         $faq = collect($this->schema()['@graph'])->firstWhere('@type', 'FAQPage');
 
         $response->assertSee('id="faq"', false);
-        $response->assertSee('მქრქალი ჭერის კვადრატული მეტრი 19 ₾ ღირს');
+        $response->assertSee("მქრქალი ჭერის კვადრატული მეტრი 19\u{00A0}₾ ღირს");
         $this->assertCount(count(config('homepage.faq.items')), $faq['mainEntity']);
 
         foreach (\App\Support\Faq::items(config('homepage')) as $item) {
@@ -92,7 +92,7 @@ class SeoTest extends TestCase
         $response->assertOk();
         $response->assertSee('# Plafondi', false);
         $response->assertSee('- მქრქალი: 21 ₾ / მ²', false);
-        $response->assertSee('### რა ღირს გასაჭიმი ჭერი?', false);
+        $response->assertSee('#### რა ღირს გასაჭიმი ჭერი?', false);
         $response->assertDontSee('+995 555 00 00 00', false);
     }
 

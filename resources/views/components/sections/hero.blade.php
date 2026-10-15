@@ -13,8 +13,8 @@
     <div
         data-hero-slideshow
         tabindex="0"
-        aria-roledescription="სლაიდშოუ"
-        aria-label="გასაჭიმი ჭერის ფოტოები"
+        aria-roledescription="{{ $content['ui']['slideshow'] }}"
+        aria-label="{{ $content['ui']['slideshow_label'] }}"
         style="--slide-duration: 6s"
         class="relative flex min-h-[calc(100svh-4rem)] flex-col overflow-hidden focus:outline-none lg:h-[calc(100svh-4rem)] lg:max-h-[920px] lg:min-h-[620px]"
     >
@@ -63,6 +63,7 @@
                             :amount="$cheapestFinish['price']"
                             :unit="$cheapestFinish['unit']"
                             :currency="$pricing['currency']"
+                            :prefix="$pricing['from_prefix']"
                             :from="$pricing['from']"
                             class="font-display text-3xl font-semibold whitespace-nowrap"
                             unit-class="font-sans text-base font-normal text-white/60"
@@ -102,7 +103,7 @@
                             type="button"
                             data-slide-thumb
                             data-index="{{ $i }}"
-                            aria-label="სურათი {{ $i + 1 }}: {{ $slide['caption'] }}"
+                            aria-label="{{ $content['ui']['slide'] }} {{ $i + 1 }}: {{ $slide['caption'] }}"
                             aria-current="{{ $i === 0 ? 'true' : 'false' }}"
                             class="relative h-1 flex-1 overflow-hidden rounded-full bg-white/30 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:h-14 sm:w-20 sm:flex-none sm:rounded-md sm:bg-transparent {{ $i === 0 ? 'opacity-100' : 'opacity-55 hover:opacity-90' }}"
                         >

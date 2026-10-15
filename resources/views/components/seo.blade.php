@@ -1,6 +1,7 @@
 @props(['content'])
 
-{{-- Search results, link previews and the business details Google reads (schema.org JSON-LD). --}}
+{{-- Search results, link previews and the business details Google reads (schema.org JSON-LD),
+     in the page's language, with links to the same page in the other languages. --}}
 @php
     $brand = $content['brand'];
     $seo = $content['seo'];
@@ -8,7 +9,11 @@
     $contact = $content['contact'];
     $area = $content['area'];
 
-    $home = rtrim(config('app.url'), '/').'/';
+    $locales = \App\Support\Content::locales();
+    $locale = app()->getLocale();
+    // The business is one entity whatever the language, so its id lives on the default home page.
+    $home = \App\Support\Content::url(\App\Support\Content::defaultLocale());
+    $page = \App\Support\Content::url($locale);
     $cheapest = collect($pricing['finishes'])->min('price');
     $title = $seo['title'].' | '.$brand['name'];
     $description = str_replace(':price', $cheapest.' '.$pricing['currency'], $seo['description']);
@@ -29,7 +34,7 @@
             fn (string $name) => asset("images/projects/{$name}.webp"),
             array_keys($content['photos']),
         )),
-        'priceRange' => collect($pricing['finishes'])->min('price').'-'.collect($pricing['finishes'])->max('price').' '.$pricing['currency'].' / მ²',
+        'priceRange' => $cheapest.'-'.collect($pricing['finishes'])->max('price').' '.$pricing['currency'].' / '.collect($pricing['finishes'])->first()['unit'],
         'currenciesAccepted' => 'GEL',
         'address' => ['@type' => 'PostalAddress', 'addressLocality' => $mainCity['name'], 'addressCountry' => 'GE'],
         'geo' => ['@type' => 'GeoCoordinates', 'latitude' => $mainCity['lat'], 'longitude' => $mainCity['lng']],
@@ -45,7 +50,7 @@
             'name' => $seo['title'],
             'itemListElement' => array_values(array_map(fn (array $finish) => [
                 '@type' => 'Offer',
-                'itemOffered' => ['@type' => 'Service', 'name' => 'გასაჭიმი ჭერი, '.$finish['name']],
+                'itemOffered' => ['@type' => 'Service', 'name' => str_replace(':finish', $finish['name'], $seo['offer'])],
                 'priceSpecification' => [
                     '@type' => 'UnitPriceSpecification',
                     'price' => $finish['price'],
@@ -71,14 +76,15 @@
                 'url' => $home,
                 'name' => $brand['name'],
                 'alternateName' => parse_url($home, PHP_URL_HOST),
-                'inLanguage' => 'ka',
+                'inLanguage' => array_keys($locales),
                 'publisher' => ['@id' => $home.'#business'],
             ],
             $business,
             [
                 '@type' => 'FAQPage',
-                '@id' => $home.'#faq',
-                'inLanguage' => 'ka',
+                '@id' => $page.'#faq',
+                'url' => $page,
+                'inLanguage' => $locale,
                 'mainEntity' => array_map(fn (array $item) => [
                     '@type' => 'Question',
                     'name' => $item['question'],
@@ -91,16 +97,24 @@
 
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $description }}">
-<link rel="canonical" href="{{ $home }}">
+<link rel="canonical" href="{{ $page }}">
+@foreach ($locales as $code => $language)
+    <link rel="alternate" hreflang="{{ $code }}" href="{{ \App\Support\Content::url($code) }}">
+@endforeach
+<link rel="alternate" hreflang="x-default" href="{{ $home }}">
 
 <link rel="icon" href="{{ $versioned('favicon.ico') }}" sizes="48x48">
 <link rel="icon" href="{{ $versioned('favicon.svg') }}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{{ $versioned('apple-touch-icon.png') }}">
 
 <meta property="og:type" content="website">
-<meta property="og:locale" content="ka_GE">
+<meta property="og:locale" content="{{ $locales[$locale]['og'] }}">
+@foreach ($locales as $code => $language)
+    @continue($code === $locale)
+    <meta property="og:locale:alternate" content="{{ $language['og'] }}">
+@endforeach
 <meta property="og:site_name" content="{{ $brand['name'] }}">
-<meta property="og:url" content="{{ $home }}">
+<meta property="og:url" content="{{ $page }}">
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $description }}">
 <meta property="og:image" content="{{ $image }}">

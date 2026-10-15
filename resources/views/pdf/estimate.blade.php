@@ -4,16 +4,17 @@
     $labels = $content['calculator']['labels'];
     $pdf = $content['calculator']['pdf'];
     $currency = $content['pricing']['currency'];
-    $fonts = resource_path('fonts');
+    $fontDir = resource_path('fonts');
+    $format = $content['locales'][$locale];
 
-    // Georgian number style: comma decimals, space thousands, no trailing zeros.
-    $number = fn (float $value): string => rtrim(rtrim(number_format($value, 2, ',', ' '), '0'), ',');
+    // The language's number style (e.g. "4,5" or "4.5"), without trailing zeros.
+    $number = fn (float $value): string => rtrim(rtrim(number_format($value, 2, $format['decimal'], $format['thousands']), '0'), $format['decimal']);
     $money = fn (float $value): string => $number($value).' '.$currency;
-    // The PDF font has no "²" glyph, so it is drawn as a raised 2.
+    // The Georgian fonts have no "²" glyph, so it is drawn as a raised 2.
     $unit = fn (string $text): string => str_replace('²', '<sup>2</sup>', e($text));
 @endphp
 <!DOCTYPE html>
-<html lang="ka">
+<html lang="{{ $locale }}">
 <head>
     <meta charset="utf-8">
     <title>{{ $pdf['title'] }} {{ $reference }}</title>
@@ -22,21 +23,43 @@
             font-family: 'Noto Sans Georgian';
             font-style: normal;
             font-weight: normal;
-            src: url('{{ $fonts }}/NotoSansGeorgian-Regular.ttf') format('truetype');
+            src: url('{{ $fontDir }}/NotoSansGeorgian-Regular.ttf') format('truetype');
         }
 
         @font-face {
             font-family: 'Noto Sans Georgian';
             font-style: normal;
             font-weight: bold;
-            src: url('{{ $fonts }}/NotoSansGeorgian-Bold.ttf') format('truetype');
+            src: url('{{ $fontDir }}/NotoSansGeorgian-Bold.ttf') format('truetype');
         }
 
         @font-face {
             font-family: 'Noto Serif Georgian';
             font-style: normal;
             font-weight: bold;
-            src: url('{{ $fonts }}/NotoSerifGeorgian-SemiBold.ttf') format('truetype');
+            src: url('{{ $fontDir }}/NotoSerifGeorgian-SemiBold.ttf') format('truetype');
+        }
+
+        /* Latin and Cyrillic, for the Russian and English estimates. */
+        @font-face {
+            font-family: 'Noto Sans';
+            font-style: normal;
+            font-weight: normal;
+            src: url('{{ $fontDir }}/NotoSans-Regular.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Noto Sans';
+            font-style: normal;
+            font-weight: bold;
+            src: url('{{ $fontDir }}/NotoSans-Bold.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Noto Serif';
+            font-style: normal;
+            font-weight: bold;
+            src: url('{{ $fontDir }}/NotoSerif-SemiBold.ttf') format('truetype');
         }
 
         @page {
@@ -44,7 +67,7 @@
         }
 
         body {
-            font-family: 'Noto Sans Georgian';
+            font-family: '{{ $typefaces['sans'] }}';
             font-size: 9.5pt;
             line-height: 1.35;
             color: #17191b;
@@ -68,7 +91,7 @@
         }
 
         .display {
-            font-family: 'Noto Serif Georgian';
+            font-family: '{{ $typefaces['serif'] }}';
             font-weight: bold;
         }
 

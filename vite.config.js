@@ -17,10 +17,18 @@ export default defineConfig({
                     weights: [500, 600],
                     subsets: ['georgian'],
                 }),
-                // Latin letters and digits in serif text, e.g. the "Plafondi" wordmark and prices.
+                // Latin and Cyrillic for the Russian and English pages, and for digits and the
+                // "Plafondi" wordmark everywhere. Not preloaded: thanks to unicode-range a browser
+                // only downloads the files whose letters the page actually uses.
+                bunny('Noto Sans', {
+                    weights: [400, 500, 600, 700],
+                    subsets: ['latin', 'cyrillic'],
+                    preload: false,
+                }),
                 bunny('Noto Serif', {
                     weights: [500, 600],
-                    subsets: ['latin'],
+                    subsets: ['latin', 'cyrillic'],
+                    preload: false,
                 }),
             ],
         }),

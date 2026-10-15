@@ -70,6 +70,10 @@ Check `https://plafondi.com/up`, the home page, and the calculator's **PDF-áƒ˜áƒ
 
 - **After changing prices or texts** in `config/homepage.php`: commit, push, then redeploy.
   Coolify skips the build when the commit hasn't changed, so always push a new commit.
+- **Languages:** Georgian at `/` (texts in `config/homepage.php`), Russian at `/ru` and English
+  at `/en` (texts in `lang/ru/homepage.php` and `lang/en/homepage.php`, same keys). Prices and
+  photos are shared. When you add or change a Georgian text, add it to both translation files
+  too; the tests fail if any text is left untranslated.
 - **No persistent volume is needed.** Nothing is uploaded; the PDF font cache in
   `storage/fonts` is rebuilt automatically after each deploy.
 - **Photos:** the hero slideshow still uses Pexels photos. Our own work photos live in

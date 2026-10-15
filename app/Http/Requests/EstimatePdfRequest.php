@@ -39,6 +39,7 @@ class EstimatePdfRequest extends FormRequest
         $size = ['required', 'numeric', 'min:'.$dimensions['min'], 'max:'.$dimensions['input_max']];
 
         return [
+            'locale' => ['sometimes', Rule::in(array_keys(config('homepage.locales')))],
             'rooms' => ['required', 'array', 'min:1', 'max:'.config('homepage.calculator.max_rooms')],
             'rooms.*.length' => $size,
             'rooms.*.width' => $size,

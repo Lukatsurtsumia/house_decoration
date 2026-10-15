@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EstimatePdfRequest;
 use App\Models\Estimate;
+use App\Support\Content;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Http\Response;
@@ -12,11 +13,24 @@ use Illuminate\Support\Facades\File;
 class EstimatePdfController extends Controller
 {
     /**
-     * Turn the calculator's rooms into a downloadable PDF estimate.
+     * The Georgian fonts have no Cyrillic, so Russian and English estimates use Noto Sans and
+     * Noto Serif: the same design, with Latin and Cyrillic letters.
+     */
+    private const TYPEFACES = [
+        'ka' => ['sans' => 'Noto Sans Georgian', 'serif' => 'Noto Serif Georgian'],
+        'other' => ['sans' => 'Noto Sans', 'serif' => 'Noto Serif'],
+    ];
+
+    /**
+     * Turn the calculator's rooms into a downloadable PDF estimate in the page's language.
      */
     public function __invoke(EstimatePdfRequest $request): Response
     {
-        $content = config('homepage');
+        $locale = $request->validated('locale') ?? Content::defaultLocale();
+        app()->setLocale($locale);
+
+        $content = Content::get($locale);
+        $typefaces = self::TYPEFACES[$locale] ?? self::TYPEFACES['other'];
         $rooms = $request->validated('rooms');
         $estimate = Estimate::fromRooms($rooms, $content['pricing'], $content['calculator']['labels']);
 
@@ -31,16 +45,16 @@ class EstimatePdfController extends Controller
             ->setChroot([resource_path('fonts')])
             ->setFontDir($fontCache)
             ->setFontCache($fontCache)
-            ->setDefaultFont('Noto Sans Georgian');
+            ->setDefaultFont($typefaces['sans']);
 
         $pdf = new Dompdf($options);
         $pdf->setPaper('A4');
-        $pdf->loadHtml(view('pdf.estimate', compact('content', 'estimate', 'reference', 'issuedAt'))->render(), 'UTF-8');
+        $pdf->loadHtml(view('pdf.estimate', compact('content', 'estimate', 'reference', 'issuedAt', 'locale', 'typefaces'))->render(), 'UTF-8');
         $pdf->render();
 
         // CSS cannot count pages in dompdf, so "1 / 2" is stamped into the footer after rendering.
         $canvas = $pdf->getCanvas();
-        $font = $pdf->getFontMetrics()->getFont('Noto Sans Georgian');
+        $font = $pdf->getFontMetrics()->getFont($typefaces['sans']);
         $canvas->page_text($canvas->get_width() - 66, $canvas->get_height() - 39.5, '{PAGE_NUM} / {PAGE_COUNT}', $font, 7.5, [0.4, 0.43, 0.45]);
 
         $filename = $content['calculator']['pdf']['filename'].'-'.$issuedAt->format('Y-m-d').'.pdf';

@@ -14,13 +14,16 @@ class Faq
      */
     public static function items(array $content): array
     {
+        $currency = $content['pricing']['currency'];
+
         return array_map(fn (array $item) => [
             'question' => $item['question'],
-            'answer' => preg_replace_callback(
+            // A non-breaking space keeps "25 ₾" together when the answer wraps.
+            'answer' => str_replace(' '.$currency, "\u{00A0}".$currency, preg_replace_callback(
                 '/\{([a-z_.]+)\}/',
                 fn (array $match) => (string) data_get($content['pricing'], $match[1].'.price', $match[0]),
                 $item['answer'],
-            ),
+            )),
         ], $content['faq']['items']);
     }
 }

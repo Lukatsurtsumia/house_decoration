@@ -16,6 +16,8 @@
         'dimensions' => $dimensions,
         'maxRooms' => $calculator['max_rooms'],
         'labels' => $labels,
+        // Number style of the page's language, e.g. "4,5" in Georgian and Russian, "4.5" in English.
+        'intl' => $content['locales'][app()->getLocale()]['intl'],
     ];
 @endphp
 
@@ -121,7 +123,8 @@
                                     <input type="radio" name="calc-finish" value="{{ $key }}" data-calc-finish class="sr-only" @checked($loop->first)>
                                     <span class="swatch swatch-{{ $key }} size-8 rounded-md ring-1 ring-ink/10"></span>
                                     <span>
-                                        <span class="block text-sm font-semibold text-ink">{{ $finish['name'] }}</span>
+                                        {{-- Long names ("Глянцевый") may hyphenate in the three narrow columns on small phones. --}}
+                                        <span class="block text-sm font-semibold text-ink hyphens-auto [overflow-wrap:anywhere]">{{ $finish['name'] }}</span>
                                         <x-price :amount="$finish['price']" :unit="$finish['unit']" :currency="$pricing['currency']" class="text-xs text-muted" />
                                     </span>
                                 </label>
@@ -167,7 +170,7 @@
                                             type="button"
                                             data-calc-step="-1"
                                             data-key="{{ $key }}"
-                                            aria-label="შემცირება: {{ $extra['name'] }}"
+                                            aria-label="{{ $labels['decrease'] }}: {{ $extra['name'] }}"
                                             class="grid size-8 place-items-center text-ink-soft transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-30"
                                         >
                                             <x-icon name="minus" class="size-4" />
@@ -185,7 +188,7 @@
                                             type="button"
                                             data-calc-step="1"
                                             data-key="{{ $key }}"
-                                            aria-label="გაზრდა: {{ $extra['name'] }}"
+                                            aria-label="{{ $labels['increase'] }}: {{ $extra['name'] }}"
                                             class="grid size-8 place-items-center text-ink-soft transition-colors hover:text-ink"
                                         >
                                             <x-icon name="plus" class="size-4" />
@@ -236,6 +239,7 @@
                         {{-- The server re-prices the rooms from config and sends back a PDF estimate. --}}
                         <form method="POST" action="{{ route('estimate.pdf') }}" data-calc-pdf-form>
                             @csrf
+                            <input type="hidden" name="locale" value="{{ app()->getLocale() }}">
                             <input type="hidden" name="rooms" data-calc-pdf-rooms>
                             <button
                                 type="submit"

@@ -3,8 +3,32 @@
 // Homepage content for a stretch-ceiling installer. Contacts and photos are placeholders:
 // replace them before launch. Every price lives under `pricing` and feeds both the service
 // cards and the calculator.
+//
+// This file is the Georgian site. lang/ru/homepage.php and lang/en/homepage.php hold the
+// Russian and English texts with the same keys; App\Support\Content lays them over this file,
+// so prices, photos and settings are shared and only the words change.
 
 return [
+
+    // The first language is the default and lives at "/"; the others at "/ru" and "/en".
+    // `intl` formats numbers in the calculator, `decimal`/`thousands` in the PDF.
+    'locales' => [
+        'ka' => ['name' => 'ქართული', 'label' => 'GE', 'og' => 'ka_GE', 'intl' => 'ka-GE', 'decimal' => ',', 'thousands' => ' '],
+        'ru' => ['name' => 'Русский', 'label' => 'RU', 'og' => 'ru_RU', 'intl' => 'ru-RU', 'decimal' => ',', 'thousands' => ' '],
+        'en' => ['name' => 'English', 'label' => 'EN', 'og' => 'en_US', 'intl' => 'en-US', 'decimal' => '.', 'thousands' => ','],
+    ],
+
+    // Labels that are only read by screen readers or shown in small controls.
+    'ui' => [
+        'main_nav' => 'მთავარი ნავიგაცია',
+        'mobile_nav' => 'მობილური ნავიგაცია',
+        'footer_nav' => 'ქვედა ნავიგაცია',
+        'menu_toggle' => 'მენიუს გახსნა/დახურვა',
+        'language' => 'ენა',
+        'slideshow' => 'სლაიდშოუ',
+        'slideshow_label' => 'გასაჭიმი ჭერის ფოტოები',
+        'slide' => 'სურათი',
+    ],
 
     // "Plafondi" is the French "plafond" (ceiling) with a Georgian ending. Register it with the
     // logo as one combined mark: a word this close to "ceiling" is hard to protect on its own.
@@ -20,6 +44,8 @@ return [
     'seo' => [
         'title' => 'გასაჭიმი ჭერები თბილისში: ფასები და მონტაჟი',
         'description' => 'გასაჭიმი ჭერის მონტაჟი თბილისში, მცხეთასა და რუსთავში. მქრქალი, სატინი და პრიალა ჭერი :price-დან მ²-ზე. დაითვალეთ ფასი ონლაინ და დაჯავშნეთ უფასო აზომვა.',
+        // How each finish is named in Google's price list, e.g. "მქრქალი გასაჭიმი ჭერი".
+        'offer' => ':finish გასაჭიმი ჭერი',
         'image' => ['path' => 'images/og-image.jpg', 'width' => 1200, 'height' => 630],
         'logo' => 'images/logo.png',
         // Matches contact.hours; used in the business details Google reads.
@@ -172,6 +198,8 @@ return [
     // Single source of truth for prices (GEL).
     'pricing' => [
         'currency' => '₾',
+        // "21 ₾-დან": Georgian puts "from" after the price; Russian and English put it before.
+        'from_prefix' => '',
         'from' => '-დან',
 
         // Small rooms are charged at least this much for the ceiling itself.
@@ -235,6 +263,8 @@ return [
             'minimum' => 'მინიმალური ღირებულება',
             'summary' => 'შეფასება',
             'total' => 'სულ',
+            'decrease' => 'შემცირება',
+            'increase' => 'გაზრდა',
         ],
         'cta' => 'აზომვის დაჯავშნა',
         'note' => 'თანხა საორიენტაციოა. საბოლოო ფასს აზომვისას შევათანხმებთ.',
@@ -339,6 +369,15 @@ return [
 
     'footer' => [
         'rights' => 'ყველა უფლება დაცულია.',
+    ],
+
+    // Headings in /llms.txt, the plain summary for AI assistants.
+    'llms' => [
+        'prices' => 'ფასები (GEL)',
+        'area' => 'მომსახურების არეალი',
+        'contact' => 'კონტაქტი',
+        'website' => 'ვებგვერდი',
+        'faq' => 'ხშირად დასმული კითხვები',
     ],
 
 ];
