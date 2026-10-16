@@ -17,6 +17,9 @@
         @case('arrow-right')
             <path d="M5 12h14M13 6l6 6-6 6" />
             @break
+        @case('arrows-horizontal')
+            <path d="m9 7-5 5 5 5M15 7l5 5-5 5" />
+            @break
         @case('play')
             <path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor" />
             @break

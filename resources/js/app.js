@@ -753,12 +753,13 @@ if (calculator) {
     document.fonts?.ready.then(() => renderPlan(rooms[active]));
 }
 
-// Before/after: each photo wipes from the bare ceiling to the finished one once it is well in view;
-// the buttons, or a tap on the photo, switch back and forth.
+// Before/after sliders: drag the line (or tap a spot, or use the arrow keys) to show more of either
+// photo. When a slider scrolls into view the line sweeps across to the full "after" once, then
+// settles in the middle with a "drag" hint.
 const comparisons = Array.from(document.querySelectorAll('[data-compare]'));
 
-// The "after" photo sits under the wipe, so fetch it now and wait until it can be drawn: on a slow
-// connection the wipe would otherwise uncover an empty frame.
+// The "after" photo sits under the line, so fetch it now and wait until it can be drawn: on a slow
+// connection the sweep would otherwise uncover an empty frame.
 const afterPhotoReady = (figure) => {
     const image = figure.querySelector('[data-compare-after] img');
     if (!image || (image.complete && image.naturalWidth)) return Promise.resolve();
@@ -768,38 +769,137 @@ const afterPhotoReady = (figure) => {
 };
 
 comparisons.forEach((figure) => {
+    const frame = figure.querySelector('[data-compare-frame]');
+    const range = figure.querySelector('[data-compare-range]');
     const buttons = Array.from(figure.querySelectorAll('[data-compare-show]'));
+    const clampPercent = (value) => Math.min(100, Math.max(0, value));
+    let animationTimer = null;
 
-    const show = async (state) => {
-        if (figure.dataset.state === state) return;
-        if (state === 'after') await afterPhotoReady(figure);
+    // 0 shows only the "after" photo, 100 only the "before".
+    const setPosition = (value, animate = false) => {
+        const position = clampPercent(value);
 
-        figure.dataset.state = state;
-        buttons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.compareShow === state)));
+        window.clearTimeout(animationTimer);
+        if (animate && !prefersReducedMotion) {
+            figure.dataset.animating = '';
+            animationTimer = window.setTimeout(() => delete figure.dataset.animating, 950);
+        } else {
+            delete figure.dataset.animating;
+        }
 
-        // Light up the moving edge only while the wipe runs.
-        if (!prefersReducedMotion) {
-            figure.dataset.wiping = '';
-            window.clearTimeout(figure.wipeTimer);
-            figure.wipeTimer = window.setTimeout(() => delete figure.dataset.wiping, 1000);
+        figure.style.setProperty('--pos', `${position}%`);
+        figure.dataset.edge = position < 8 ? 'start' : position > 92 ? 'end' : '';
+
+        const rounded = Math.round(position);
+        range.value = String(rounded);
+        range.setAttribute('aria-valuetext', `${range.dataset.labelBefore} ${rounded}%, ${range.dataset.labelAfter} ${100 - rounded}%`);
+        buttons.forEach((button) => {
+            const pressed = button.dataset.compareShow === 'before' ? position >= 99 : position <= 1;
+            button.setAttribute('aria-pressed', String(pressed));
+        });
+    };
+
+    // Any hand on the slider ends the intro and the hint.
+    const takeOver = () => {
+        figure.dataset.touched = '';
+        delete figure.dataset.hint;
+    };
+
+    const positionAt = (event) => {
+        const box = frame.getBoundingClientRect();
+        return ((event.clientX - box.left) / box.width) * 100;
+    };
+
+    // A mouse drags straight away. A finger only drags once it moves sideways, so swiping up and down
+    // still scrolls the page (the frame allows vertical panning only); a tap moves the line there.
+    let pointer = null;
+
+    // Keep receiving moves when the pointer leaves the frame; harmless if the browser refuses.
+    const capture = (event) => {
+        try {
+            frame.setPointerCapture(event.pointerId);
+        } catch {
+            // The pointer is already gone.
         }
     };
 
+    frame.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+
+        pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, dragging: event.pointerType === 'mouse' };
+        if (pointer.dragging) {
+            takeOver();
+            capture(event);
+            figure.dataset.dragging = '';
+            setPosition(positionAt(event));
+        }
+    });
+
+    frame.addEventListener('pointermove', (event) => {
+        if (!pointer || pointer.id !== event.pointerId) return;
+
+        if (!pointer.dragging) {
+            const dx = Math.abs(event.clientX - pointer.x);
+            const dy = Math.abs(event.clientY - pointer.y);
+            if (dx < 6 || dx < dy) return;
+
+            pointer.dragging = true;
+            takeOver();
+            capture(event);
+            figure.dataset.dragging = '';
+        }
+
+        setPosition(positionAt(event));
+    });
+
+    const release = (event) => {
+        if (!pointer || pointer.id !== event.pointerId) return;
+
+        const tapped = !pointer.dragging && event.type === 'pointerup';
+        pointer = null;
+        delete figure.dataset.dragging;
+
+        if (tapped) {
+            takeOver();
+            setPosition(positionAt(event), true);
+        }
+    };
+
+    frame.addEventListener('pointerup', release);
+    frame.addEventListener('pointercancel', release);
+
+    range.addEventListener('input', () => {
+        takeOver();
+        setPosition(Number(range.value));
+    });
+
     buttons.forEach((button) =>
         button.addEventListener('click', () => {
-            figure.dataset.touched = '';
-            show(button.dataset.compareShow);
+            takeOver();
+            setPosition(button.dataset.compareShow === 'before' ? 100 : 0, true);
         }),
     );
 
-    figure.querySelector('[data-compare-toggle]')?.addEventListener('click', () => {
-        figure.dataset.touched = '';
-        show(figure.dataset.state === 'after' ? 'before' : 'after');
-    });
+    figure.playIntro = async () => {
+        await afterPhotoReady(figure);
+        if ('touched' in figure.dataset) return;
 
-    figure.revealAfter = () => {
-        if (!('touched' in figure.dataset)) show('after');
+        setPosition(0, true);
+        window.setTimeout(() => {
+            if ('touched' in figure.dataset) return;
+
+            setPosition(50, true);
+            figure.dataset.hint = '';
+        }, 1700);
     };
+
+    // With reduced motion there is no sweep: the slider waits in the middle.
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+        setPosition(50);
+        figure.dataset.hint = '';
+    } else {
+        setPosition(100);
+    }
 });
 
 if (comparisons.length && 'IntersectionObserver' in window && !prefersReducedMotion) {
@@ -811,7 +911,7 @@ if (comparisons.length && 'IntersectionObserver' in window && !prefersReducedMot
                 compareObserver.unobserve(entry.target);
                 afterPhotoReady(entry.target);
                 // A moment on the "before" first, so the change is noticed.
-                window.setTimeout(() => entry.target.revealAfter(), 900);
+                window.setTimeout(() => entry.target.playIntro(), 700);
             });
         },
         { threshold: 0.6 },

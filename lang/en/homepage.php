@@ -79,6 +79,7 @@ return [
             'before' => 'Before',
             'after' => 'After',
             'compare' => 'Compare',
+            'drag' => 'Drag the line',
             'play' => 'Play video',
             'pause' => 'Pause video',
         ],

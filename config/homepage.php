@@ -121,8 +121,8 @@ return [
         'apartment-window-after' => ['width' => 1170, 'height' => 1560, 'alt' => 'თეთრი გასაჭიმი ჭერი სპოტებით აივნის კარის მხრიდან, მონტაჟის შემდეგ'],
     ],
 
-    // One real apartment, start to finish: before/after photos that wipe from concrete to the finished
-    // ceiling, how we work, and two short silent videos from the same job (public/videos).
+    // One real apartment, start to finish: before/after sliders (concrete on the left of the line, the
+    // finished ceiling on the right), how we work, and two short silent videos from the same job (public/videos).
     'transformation' => [
         'eyebrow' => 'მანამდე და შემდეგ',
         'title' => 'ერთი ბინა: შიშველი ბეტონიდან თეთრ ჭერამდე',
@@ -131,6 +131,7 @@ return [
             'before' => 'მანამდე',
             'after' => 'შემდეგ',
             'compare' => 'შედარება',
+            'drag' => 'გადაათრიეთ ზოლი',
             'play' => 'ვიდეოს ჩართვა',
             'pause' => 'ვიდეოს შეჩერება',
         ],

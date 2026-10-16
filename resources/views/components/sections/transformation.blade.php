@@ -16,55 +16,80 @@
             <p class="text-lg leading-relaxed text-muted lg:col-span-5">{{ $section['description'] }}</p>
         </div>
 
-        {{-- Each photo starts on the bare concrete and wipes to the finished ceiling when it scrolls into view.
-             The two shots were not taken from the same spot, so the reveal is animated rather than a drag slider. --}}
+        {{-- Before/after sliders: drag the line (or tap, or use the arrow keys) to show more of either photo.
+             "Before" is on the left of the line, "after" on the right; --pos is where the line sits.
+             When a photo scrolls into view the line sweeps across once, then settles in the middle. --}}
         <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10">
             @foreach ($section['pairs'] as $i => $pair)
-                <figure data-reveal data-compare data-state="before" style="--reveal-delay: {{ $i * 120 }}ms" class="group/compare m-0">
-                    <div class="relative aspect-square overflow-hidden rounded-2xl bg-ink shadow-sm ring-1 ring-ink/5">
+                <figure data-reveal data-compare style="--reveal-delay: {{ $i * 120 }}ms; --pos: 50%" class="group/compare m-0">
+                    <div
+                        data-compare-frame
+                        class="relative aspect-square cursor-ew-resize touch-pan-y overflow-hidden rounded-2xl bg-ink shadow-sm ring-1 ring-ink/5 select-none"
+                    >
                         <x-photo
                             :name="$pair['before']"
                             :photo="$photos[$pair['before']]"
                             sizes="(min-width: 768px) 50vw, 100vw"
+                            draggable="false"
                             style="object-position: {{ $pair['position'] }}"
-                            class="absolute inset-0 h-full w-full object-cover"
+                            class="pointer-events-none absolute inset-0 h-full w-full object-cover"
                         />
 
-                        <div data-compare-after class="absolute inset-0 [clip-path:inset(0_100%_0_0)] transition-[clip-path] duration-1000 ease-in-out group-data-[state=after]/compare:[clip-path:inset(0_0_0_0)] motion-reduce:transition-none">
+                        <div
+                            data-compare-after
+                            class="pointer-events-none absolute inset-0 [clip-path:inset(0_0_0_var(--pos))] group-data-[animating]/compare:transition-[clip-path] group-data-[animating]/compare:duration-900 group-data-[animating]/compare:ease-in-out"
+                        >
                             <x-photo
                                 :name="$pair['after']"
                                 :photo="$photos[$pair['after']]"
                                 sizes="(min-width: 768px) 50vw, 100vw"
+                                draggable="false"
                                 style="object-position: {{ $pair['position'] }}"
                                 class="h-full w-full object-cover"
                             />
                         </div>
 
-                        {{-- The bright edge that travels with the wipe. --}}
-                        <span
-                            aria-hidden="true"
-                            class="pointer-events-none absolute inset-y-0 left-0 w-1 -translate-x-1/2 bg-white opacity-0 shadow-[0_0_28px_6px_rgba(255,255,255,0.65)] transition-[left,opacity] duration-1000 ease-in-out group-data-[state=after]/compare:left-full group-data-[wiping]/compare:opacity-100 motion-reduce:transition-none"
-                        ></span>
-
-                        <span class="pointer-events-none absolute top-4 left-4 rounded-full bg-ink/75 px-3 py-1 text-xs font-semibold text-white backdrop-blur transition-opacity duration-500 group-data-[state=after]/compare:opacity-0">
+                        {{-- Each label fades when its photo is pushed off the frame. --}}
+                        <span class="pointer-events-none absolute top-4 left-4 rounded-full bg-ink/75 px-3 py-1 text-xs font-semibold text-white backdrop-blur transition-opacity duration-300 group-data-[edge=start]/compare:opacity-0">
                             {{ $labels['before'] }}
                         </span>
-                        <span class="pointer-events-none absolute top-4 left-4 rounded-full bg-jade px-3 py-1 text-xs font-semibold text-white opacity-0 transition-opacity duration-500 group-data-[state=after]/compare:opacity-100">
+                        <span class="pointer-events-none absolute top-4 right-4 rounded-full bg-jade px-3 py-1 text-xs font-semibold text-white transition-opacity duration-300 group-data-[edge=end]/compare:opacity-0">
                             {{ $labels['after'] }}
                         </span>
 
-                        <button
-                            type="button"
-                            data-compare-toggle
+                        {{-- The line and its handle. --}}
+                        <div
+                            aria-hidden="true"
+                            class="pointer-events-none absolute inset-y-0 left-(--pos) w-0.5 -translate-x-1/2 bg-white shadow-[0_0_18px_rgba(0,0,0,0.35)] group-data-[animating]/compare:transition-[left] group-data-[animating]/compare:duration-900 group-data-[animating]/compare:ease-in-out"
+                        >
+                            <span class="absolute top-1/2 left-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-ink shadow-lg ring-1 ring-ink/10 transition-transform group-has-[:focus-visible]/compare:ring-4 group-has-[:focus-visible]/compare:ring-jade/50 group-data-[dragging]/compare:scale-110">
+                                <x-icon name="arrows-horizontal" class="size-5" />
+                            </span>
+                        </div>
+
+                        <span class="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-ink/70 px-3 py-1 text-xs font-semibold whitespace-nowrap text-white opacity-0 backdrop-blur transition-opacity duration-500 group-data-[hint]/compare:opacity-100">
+                            {{ $labels['drag'] }}
+                        </span>
+
+                        {{-- The same position as a slider, for the keyboard and screen readers. --}}
+                        <input
+                            type="range"
+                            data-compare-range
+                            data-label-before="{{ $labels['before'] }}"
+                            data-label-after="{{ $labels['after'] }}"
+                            min="0"
+                            max="100"
+                            step="5"
+                            value="50"
                             aria-label="{{ $labels['compare'] }}: {{ $pair['title'] }}"
-                            class="absolute inset-0 cursor-pointer focus:outline-none focus-visible:ring-4 focus-visible:ring-jade/60 focus-visible:ring-inset"
-                        ></button>
+                            class="sr-only"
+                        >
                     </div>
 
                     <figcaption class="mt-4 flex flex-wrap items-center justify-between gap-3">
                         <span class="font-display text-lg font-semibold text-ink">{{ $pair['title'] }}</span>
                         <span role="group" aria-label="{{ $labels['compare'] }}" class="inline-flex rounded-lg border border-line bg-white p-1 text-sm font-semibold">
-                            <button type="button" data-compare-show="before" aria-pressed="true" class="rounded-md px-3 py-1.5 text-ink-soft transition-colors hover:text-ink aria-pressed:bg-ink aria-pressed:text-white">
+                            <button type="button" data-compare-show="before" aria-pressed="false" class="rounded-md px-3 py-1.5 text-ink-soft transition-colors hover:text-ink aria-pressed:bg-ink aria-pressed:text-white">
                                 {{ $labels['before'] }}
                             </button>
                             <button type="button" data-compare-show="after" aria-pressed="false" class="rounded-md px-3 py-1.5 text-ink-soft transition-colors hover:text-ink aria-pressed:bg-jade aria-pressed:text-white">
