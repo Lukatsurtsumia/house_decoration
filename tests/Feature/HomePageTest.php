@@ -12,7 +12,7 @@ class HomePageTest extends TestCase
 
         $response->assertOk();
 
-        foreach (['home', 'results', 'services', 'projects', 'calculator', 'area', 'faq', 'contact', 'map'] as $id) {
+        foreach (['home', 'results', 'services', 'projects', 'calculator', 'area', 'contact', 'map'] as $id) {
             $response->assertSee('id="'.$id.'"', false);
         }
     }

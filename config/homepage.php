@@ -342,14 +342,10 @@ return [
         ],
     ],
 
-    // Questions people ask before ordering. Google and AI assistants (Google AI Mode, ChatGPT…)
-    // quote short, factual answers like these, so keep them accurate. Prices are written as
-    // {path} inside `pricing` (e.g. {finishes.matte}) and always show the current price.
+    // Questions people ask before ordering. Since 2026-10-17 they are no longer shown on the page;
+    // they only go into /llms.txt, the plain summary AI assistants read, so keep them accurate.
+    // Prices are written as {path} inside `pricing` (e.g. {finishes.matte}) and stay current.
     'faq' => [
-        'eyebrow' => 'კითხვები',
-        'title' => 'ხშირად დასმული კითხვები გასაჭიმ ჭერზე',
-        'description' => 'მოკლე პასუხები იმაზე, რასაც ყველაზე ხშირად გვეკითხებიან. თუ თქვენს კითხვას აქ ვერ იპოვით, დაგვიკავშირდით.',
-        'cta' => 'კითხვის დასმა',
         'items' => [
             [
                 'question' => 'რა ღირს გასაჭიმი ჭერი?',

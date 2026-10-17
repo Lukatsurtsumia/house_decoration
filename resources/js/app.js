@@ -61,7 +61,7 @@ if (navToggle && navMenu) {
 }
 
 // Language switcher: close it on an outside click or Escape, and keep the visitor's place on the
-// page (#calculator, #faq…) when they switch language.
+// page (#calculator, #results…) when they switch language.
 const languageSwitcher = document.querySelector('[data-lang-switcher]');
 
 if (languageSwitcher) {

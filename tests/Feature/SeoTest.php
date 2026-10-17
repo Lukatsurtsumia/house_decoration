@@ -69,16 +69,20 @@ class SeoTest extends TestCase
         $this->assertSame('+995599123456', $business['telephone']);
     }
 
-    public function test_the_faq_answers_quote_current_prices(): void
+    public function test_the_page_has_no_faq_and_google_is_not_told_about_one(): void
+    {
+        $response = $this->get('/');
+
+        // Google only accepts FAQ markup for questions that are visible on the page.
+        $response->assertDontSee('id="faq"', false);
+        $this->assertNull(collect($this->schema()['@graph'])->firstWhere('@type', 'FAQPage'));
+    }
+
+    public function test_the_faq_answers_in_llms_txt_quote_current_prices(): void
     {
         config()->set('homepage.pricing.finishes.matte.price', 19);
 
-        $response = $this->get('/');
-        $faq = collect($this->schema()['@graph'])->firstWhere('@type', 'FAQPage');
-
-        $response->assertSee('id="faq"', false);
-        $response->assertSee("მქრქალი ჭერის კვადრატული მეტრი 19\u{00A0}₾ ღირს");
-        $this->assertCount(count(config('homepage.faq.items')), $faq['mainEntity']);
+        $this->get('/llms.txt')->assertSee("მქრქალი ჭერის კვადრატული მეტრი 19\u{00A0}₾ ღირს", false);
 
         foreach (\App\Support\Faq::items(config('homepage')) as $item) {
             $this->assertDoesNotMatchRegularExpression('/\{[a-z_.]+\}/', $item['answer'], 'Unknown price in: '.$item['question']);

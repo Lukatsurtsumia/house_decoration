@@ -81,17 +81,6 @@
                 'publisher' => ['@id' => $home.'#business'],
             ],
             $business,
-            [
-                '@type' => 'FAQPage',
-                '@id' => $page.'#faq',
-                'url' => $page,
-                'inLanguage' => $locale,
-                'mainEntity' => array_map(fn (array $item) => [
-                    '@type' => 'Question',
-                    'name' => $item['question'],
-                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $item['answer']],
-                ], \App\Support\Faq::items($content)),
-            ],
         ],
     ];
 @endphp

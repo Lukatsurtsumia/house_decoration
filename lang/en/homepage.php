@@ -231,10 +231,6 @@ return [
     ],
 
     'faq' => [
-        'eyebrow' => 'Questions',
-        'title' => 'Frequently asked questions about stretch ceilings',
-        'description' => 'Short answers to the questions we hear most often. If yours is not here, get in touch.',
-        'cta' => 'Ask a question',
         'items' => [
             [
                 'question' => 'How much does a stretch ceiling cost?',
