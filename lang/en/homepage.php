@@ -30,8 +30,8 @@ return [
 
     'nav' => [
         'items' => [
-            ['label' => 'Services'],
             ['label' => 'Our work'],
+            ['label' => 'Services'],
             ['label' => 'Price calculator'],
             ['label' => 'Service area'],
             ['label' => 'Contact'],
@@ -72,9 +72,6 @@ return [
     ],
 
     'transformation' => [
-        'eyebrow' => 'Before and after',
-        'title' => 'One apartment: from bare concrete to a clean white ceiling',
-        'description' => 'The same apartment before and after our work. The stretch ceiling completely hides the bare concrete and wiring, without tearing out the old ceiling.',
         'labels' => [
             'before' => 'Before',
             'after' => 'After',
@@ -97,14 +94,19 @@ return [
             ['title' => 'Installation in progress', 'caption' => 'Fixing the profile along the walls'],
             ['title' => 'The finished apartment', 'caption' => 'The same apartment with stretch ceilings'],
         ],
-        'cta_text' => 'Want a ceiling like this?',
-        'cta' => 'Book a free measurement',
     ],
 
     'projects' => [
         'eyebrow' => 'Our work',
         'title' => 'Completed projects',
-        'description' => 'Photos from our own jobs. Tap a project to see its photos full size.',
+        'description' => 'Real photos and video from our own jobs. Compare a room before and after installation, browse our projects or see how we work.',
+        'tabs' => [
+            'compare' => 'Before & after',
+            'gallery' => 'Projects',
+            'videos' => 'Video',
+        ],
+        'cta_text' => 'Want a ceiling like this?',
+        'cta' => 'Book a free measurement',
         'labels' => [
             'photos' => 'photos',
             'open' => 'View photos',

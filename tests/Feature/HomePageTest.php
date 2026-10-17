@@ -12,9 +12,37 @@ class HomePageTest extends TestCase
 
         $response->assertOk();
 
-        foreach (['home', 'results', 'services', 'projects', 'calculator', 'area', 'contact', 'map'] as $id) {
+        foreach (['home', 'projects', 'services', 'calculator', 'area', 'contact', 'map'] as $id) {
             $response->assertSee('id="'.$id.'"', false);
         }
+
+        // The before/after photos, projects and videos share the projects section.
+        $response->assertDontSee('id="results"', false);
+    }
+
+    public function test_our_work_comes_right_after_the_hero_and_first_in_the_menu(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertSeeInOrder(['id="home"', 'id="projects"', 'id="services"'], false);
+        $this->assertSame('#projects', config('homepage.nav.items.0.href'));
+    }
+
+    public function test_our_work_opens_on_before_and_after_with_the_other_tabs_hidden(): void
+    {
+        $response = $this->get('/');
+        $tabs = config('homepage.projects.tabs');
+
+        $response->assertSeeInOrder([
+            'role="tablist"',
+            'aria-selected="true"', $tabs['compare'],
+            'aria-selected="false"', $tabs['gallery'],
+            'aria-selected="false"', $tabs['videos'],
+            'id="projects-panel-compare" role="tabpanel" aria-labelledby="projects-tab-compare" class',
+            'id="projects-panel-gallery" role="tabpanel" aria-labelledby="projects-tab-gallery" hidden',
+            'id="projects-panel-videos" role="tabpanel" aria-labelledby="projects-tab-videos" hidden',
+            config('homepage.projects.cta'),
+        ], false);
     }
 
     public function test_before_and_after_photos_and_videos_are_shown(): void

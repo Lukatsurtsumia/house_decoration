@@ -54,8 +54,8 @@ return [
 
     'nav' => [
         'items' => [
-            ['label' => 'სერვისები', 'href' => '#services'],
             ['label' => 'ნამუშევრები', 'href' => '#projects'],
+            ['label' => 'სერვისები', 'href' => '#services'],
             ['label' => 'ფასის დათვლა', 'href' => '#calculator'],
             ['label' => 'არეალი', 'href' => '#area'],
             ['label' => 'კონტაქტი', 'href' => '#contact'],
@@ -121,12 +121,10 @@ return [
         'apartment-window-after' => ['width' => 1170, 'height' => 1560, 'alt' => 'თეთრი გასაჭიმი ჭერი სპოტებით აივნის კარის მხრიდან, მონტაჟის შემდეგ'],
     ],
 
-    // One real apartment, start to finish: before/after sliders (concrete on the left of the line, the
-    // finished ceiling on the right), how we work, and two short silent videos from the same job (public/videos).
+    // One real apartment, start to finish, shown in two tabs of the projects section: before/after sliders
+    // (concrete on the left of the line, the finished ceiling on the right), and how we work next to two
+    // short silent videos from the same job (public/videos).
     'transformation' => [
-        'eyebrow' => 'მანამდე და შემდეგ',
-        'title' => 'ერთი ბინა: შიშველი ბეტონიდან თეთრ ჭერამდე',
-        'description' => 'ერთი და იგივე ბინა სამუშაომდე და მის შემდეგ. შიშველი ბეტონი და სადენები გასაჭიმმა ჭერმა სრულად დაფარა, ძველი ჭერის დაშლის გარეშე.',
         'labels' => [
             'before' => 'მანამდე',
             'after' => 'შემდეგ',
@@ -151,14 +149,21 @@ return [
             ['file' => 'installation', 'width' => 360, 'height' => 398, 'title' => 'მონტაჟის პროცესი', 'caption' => 'პროფილს კედლების გასწვრივ ვამაგრებთ'],
             ['file' => 'walkthrough', 'width' => 360, 'height' => 640, 'title' => 'დასრულებული ბინა', 'caption' => 'იგივე ბინა გასაჭიმი ჭერით'],
         ],
-        'cta_text' => 'გინდათ ასეთი ჭერი?',
-        'cta' => 'უფასო აზომვის დაჯავშნა',
     ],
 
+    // Our work, in one section with three tabs: the before/after sliders and the videos come from
+    // `transformation` above, the gallery from `items` below. One call to action sits under all three.
     'projects' => [
         'eyebrow' => 'ნამუშევრები',
         'title' => 'ჩვენი შესრულებული პროექტები',
-        'description' => 'ფოტოები ჩვენი ობიექტებიდან. დააჭირეთ პროექტს და ფოტოებს დიდ ზომაში ნახავთ.',
+        'description' => 'რეალური ფოტოები და ვიდეო ჩვენი ობიექტებიდან. შეადარეთ ოთახი მონტაჟამდე და მის შემდეგ, დაათვალიერეთ პროექტები ან ნახეთ, როგორ ვმუშაობთ.',
+        'tabs' => [
+            'compare' => 'მანამდე და შემდეგ',
+            'gallery' => 'პროექტები',
+            'videos' => 'ვიდეო',
+        ],
+        'cta_text' => 'გინდათ ასეთი ჭერი?',
+        'cta' => 'უფასო აზომვის დაჯავშნა',
         'labels' => [
             'photos' => 'ფოტო',
             'open' => 'ფოტოების ნახვა',

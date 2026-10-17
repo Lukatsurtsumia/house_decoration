@@ -61,7 +61,7 @@ if (navToggle && navMenu) {
 }
 
 // Language switcher: close it on an outside click or Escape, and keep the visitor's place on the
-// page (#calculator, #results…) when they switch language.
+// page (#calculator, #projects…) when they switch language.
 const languageSwitcher = document.querySelector('[data-lang-switcher]');
 
 if (languageSwitcher) {
@@ -752,6 +752,35 @@ if (calculator) {
     // The area label is measured to fit the room, so measure again once the web fonts have loaded.
     document.fonts?.ready.then(() => renderPlan(rooms[active]));
 }
+
+// Tabs (our work: before/after, projects, video). A click or the arrow keys open a tab; the sliders
+// and videos inside start as they come into view, so a tab opened later still gets its intro.
+document.querySelectorAll('[data-tabs]').forEach((tabs) => {
+    const buttons = Array.from(tabs.querySelectorAll('[role="tab"]'));
+
+    const select = (selected) => {
+        buttons.forEach((button) => {
+            const active = button === selected;
+            button.setAttribute('aria-selected', String(active));
+            button.tabIndex = active ? 0 : -1;
+            document.getElementById(button.getAttribute('aria-controls')).hidden = !active;
+        });
+    };
+
+    buttons.forEach((button, index) => {
+        button.addEventListener('click', () => select(button));
+
+        button.addEventListener('keydown', (event) => {
+            const targets = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: buttons.length - 1 };
+            if (!(event.key in targets)) return;
+
+            event.preventDefault();
+            const next = buttons[(targets[event.key] + buttons.length) % buttons.length];
+            select(next);
+            next.focus();
+        });
+    });
+});
 
 // Before/after sliders: drag the line (or tap a spot, or use the arrow keys) to show more of either
 // photo. When a slider scrolls into view the line sweeps across to the full "after" once, then
