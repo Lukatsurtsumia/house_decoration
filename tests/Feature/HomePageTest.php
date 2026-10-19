@@ -60,7 +60,11 @@ class HomePageTest extends TestCase
         }
 
         foreach ($section['videos'] as $video) {
-            $response->assertSee('videos/'.$video['file'].'.mp4', false);
+            // Versioned, so a copy cached in a bad state by Cloudflare or a phone is not reused.
+            foreach (['mp4', 'webp'] as $type) {
+                $path = 'videos/'.$video['file'].'.'.$type;
+                $response->assertSee($path.'?v='.substr(md5_file(public_path($path)), 0, 8), false);
+            }
             $this->assertFileExists(public_path('videos/'.$video['file'].'.mp4'));
             $this->assertFileExists(public_path('videos/'.$video['file'].'.webp'));
         }

@@ -34,6 +34,10 @@
         'gallery' => 'photos',
         'videos' => 'play',
     ];
+
+    // Video links carry a hash of the file. Cloudflare and browsers keep media for a year, so a
+    // changed file (or a copy cached in a bad state) is fetched again under a new address.
+    $versioned = fn (string $path) => asset($path).'?v='.substr(md5_file(public_path($path)), 0, 8);
 @endphp
 
 <section id="projects" class="scroll-mt-16 bg-mist py-20 sm:py-24">
@@ -227,13 +231,13 @@
                                         loop
                                         playsinline
                                         preload="none"
-                                        poster="{{ asset('videos/'.$video['file'].'.webp') }}"
+                                        poster="{{ $versioned('videos/'.$video['file'].'.webp') }}"
                                         width="{{ $video['width'] }}"
                                         height="{{ $video['height'] }}"
                                         aria-label="{{ $video['title'] }}"
                                         class="h-full w-full object-cover"
                                     >
-                                        <source src="{{ asset('videos/'.$video['file'].'.mp4') }}" type="video/mp4">
+                                        <source src="{{ $versioned('videos/'.$video['file'].'.mp4') }}" type="video/mp4">
                                     </video>
 
                                     <button

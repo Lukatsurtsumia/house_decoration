@@ -31,6 +31,12 @@ can issue its Let's Encrypt certificates.
 4. **Domains:** `https://plafondi.com,https://www.plafondi.com,https://plafond.arte-company.com`
    (every address the site should answer on; the extra ones forward to `APP_URL`).
 5. **Health check** (optional): path `/up`, port `8080`.
+6. **Advanced → Gzip Compression: off.** Coolify's proxy otherwise compresses every file,
+   videos included, and a compressed file cannot be sent in parts. iPhones (Safari) only play
+   a video that can be, so the videos stay blank there. Text files are still compressed by
+   nginx inside the container and by Cloudflare. To check after a deploy:
+   `curl -s -o /dev/null -w '%{http_code}\n' -r 0-1 https://plafondi.com/videos/installation.mp4`
+   must print `206`. (Use the address from the page source, with its `?v=`.)
 
 ## 4. Environment variables
 
@@ -80,3 +86,5 @@ Check `https://plafondi.com/up`, the home page, and the calculator's **PDF-ი�
   `public/images/projects` and are listed under `photos` in `config/homepage.php`.
 - **Videos:** short silent clips in `public/videos` (`<name>.mp4`, H.264, with a `<name>.webp`
   poster), listed under `transformation.videos`. Keep them small: they play when scrolled into view.
+  Their links end in `?v=<hash of the file>`, so a replaced video is fetched fresh despite the
+  year-long cache.
