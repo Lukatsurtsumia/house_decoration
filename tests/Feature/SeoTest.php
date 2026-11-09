@@ -69,6 +69,19 @@ class SeoTest extends TestCase
         $this->assertSame('+995599123456', $business['telephone']);
     }
 
+    public function test_the_real_contacts_are_on_the_page_and_given_to_google(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertSee('href="tel:+995593984734"', false);
+        $response->assertSee('href="mailto:info@plafondi.com"', false);
+        $response->assertDontSee(config('homepage.contact.demo_note'), false);
+
+        $business = collect($this->schema()['@graph'])->firstWhere('@type', 'HomeAndConstructionBusiness');
+        $this->assertSame('+995593984734', $business['telephone']);
+        $this->assertSame('info@plafondi.com', $business['email']);
+    }
+
     public function test_the_page_has_no_faq_and_google_is_not_told_about_one(): void
     {
         $response = $this->get('/');

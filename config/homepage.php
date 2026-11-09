@@ -1,8 +1,7 @@
 <?php
 
-// Homepage content for a stretch-ceiling installer. Contacts and photos are placeholders:
-// replace them before launch. Every price lives under `pricing` and feeds both the service
-// cards and the calculator.
+// Homepage content for a stretch-ceiling installer. Every price lives under `pricing` and feeds
+// both the service cards and the calculator.
 //
 // This file is the Georgian site. lang/ru/homepage.php and lang/en/homepage.php hold the
 // Russian and English texts with the same keys; App\Support\Content lays them over this file,
@@ -387,15 +386,17 @@ return [
         ],
     ],
 
-    // Placeholder contact details: replace them with the real ones and set `placeholder` to false.
-    // While it is true the page says the details are temporary and Google is not given them.
+    // The business's real contact details: shown on the page and in the PDF estimate, and given to
+    // Google (JSON-LD) and AI assistants (/llms.txt). Keep them the same as on the Google Business
+    // Profile and the business card. Setting `placeholder` to true hides them from Google and
+    // labels them as temporary on the page.
     'contact' => [
-        'placeholder' => true,
+        'placeholder' => false,
         'eyebrow' => 'კონტაქტი',
         'title' => 'როდის გეწვიოთ?',
         'description' => 'დარეკეთ ან მოგვწერეთ და აირჩიეთ თქვენთვის მოსახერხებელი დღე. მოვალთ, ავზომავთ ოთახს და ზუსტ ფასს იქვე გეტყვით. აზომვა უფასოა და არაფერს გავალდებულებს.',
-        'phone' => '+995 555 00 00 00',
-        'email' => 'hello@example.com',
+        'phone' => '+995 593 98 47 34',
+        'email' => 'info@plafondi.com',
         'hours' => 'ყოველდღე, 10:00 - 19:00',
         'labels' => [
             'phone' => 'ტელეფონი',
