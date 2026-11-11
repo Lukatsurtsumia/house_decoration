@@ -113,6 +113,15 @@ class SeoTest extends TestCase
         $response->assertDontSee('+995 555 00 00 00', false);
     }
 
+    public function test_the_search_console_verification_file_stays_in_place(): void
+    {
+        // Google re-checks this file: removing it un-verifies plafondi.com in Search Console.
+        $this->assertSame(
+            'google-site-verification: google89f41ca1e2fe0815.html',
+            trim(file_get_contents(public_path('google89f41ca1e2fe0815.html'))),
+        );
+    }
+
     public function test_robots_txt_points_to_the_sitemap(): void
     {
         $this->get('/robots.txt')
