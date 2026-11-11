@@ -68,6 +68,12 @@
         $business['email'] = $contact['email'];
     }
 
+    // The Google Business Profile: tells Google the profile and this website are one business.
+    if ($contact['google_profile'] ?? null) {
+        $business['hasMap'] = $contact['google_profile'];
+        $business['sameAs'] = [$contact['google_profile']];
+    }
+
     $schema = [
         '@context' => 'https://schema.org',
         '@graph' => [

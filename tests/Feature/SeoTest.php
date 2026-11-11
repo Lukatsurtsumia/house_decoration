@@ -82,6 +82,24 @@ class SeoTest extends TestCase
         $this->assertSame('info@plafondi.com', $business['email']);
     }
 
+    public function test_the_website_and_the_google_business_profile_point_to_each_other(): void
+    {
+        $profile = 'https://www.google.com/maps?cid=16460855776110059410';
+
+        foreach (['/' => 'Plafondi Google-ზე', '/ru' => 'Plafondi в Google', '/en' => 'Plafondi on Google'] as $url => $text) {
+            $this->get($url)
+                ->assertSee('href="'.e($profile).'" target="_blank" rel="noopener"', false)
+                ->assertSee($text);
+        }
+
+        $business = collect($this->schema()['@graph'])->firstWhere('@type', 'HomeAndConstructionBusiness');
+        $this->assertSame($profile, $business['hasMap']);
+        $this->assertSame([$profile], $business['sameAs']);
+
+        config()->set('homepage.contact.google_profile', null);
+        $this->get('/')->assertDontSee('Plafondi Google-ზე');
+    }
+
     public function test_the_page_has_no_faq_and_google_is_not_told_about_one(): void
     {
         $response = $this->get('/');

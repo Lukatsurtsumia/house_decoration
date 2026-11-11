@@ -398,10 +398,16 @@ return [
         'phone' => '+995 593 98 47 34',
         'email' => 'info@plafondi.com',
         'hours' => 'ყოველდღე, 10:00 - 19:00',
+        // The Google Business Profile (its customer ID, decoded from the profile's g.page link).
+        // Linked from the contact list and named in the JSON-LD (sameAs/hasMap), so Google ties
+        // the profile and the website together. Set to null to hide both.
+        'google_profile' => 'https://www.google.com/maps?cid=16460855776110059410',
+        'google_link' => 'Plafondi Google-ზე',
         'labels' => [
             'phone' => 'ტელეფონი',
             'email' => 'ელფოსტა',
             'hours' => 'სამუშაო საათები',
+            'google' => 'Google პროფილი',
         ],
         'call' => 'დარეკვა',
         'write' => 'წერილის მოწერა',

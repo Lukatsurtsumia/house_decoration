@@ -274,10 +274,12 @@ return [
         'title' => 'When should we visit?',
         'description' => 'Call or write to us and choose a day that suits you. We will come, measure the room and tell you the exact price on the spot. The measurement is free and without obligation.',
         'hours' => 'Every day, 10:00 - 19:00',
+        'google_link' => 'Plafondi on Google',
         'labels' => [
             'phone' => 'Phone',
             'email' => 'Email',
             'hours' => 'Working hours',
+            'google' => 'Google profile',
         ],
         'call' => 'Call us',
         'write' => 'Send an email',

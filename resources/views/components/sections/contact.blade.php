@@ -9,6 +9,10 @@
         ['icon' => 'mail', 'label' => $contact['labels']['email'], 'value' => $contact['email'], 'href' => 'mailto:'.$contact['email']],
         ['icon' => 'clock', 'label' => $contact['labels']['hours'], 'value' => $contact['hours'], 'href' => null],
     ];
+
+    if ($contact['google_profile'] ?? null) {
+        $details[] = ['icon' => 'pin', 'label' => $contact['labels']['google'], 'value' => $contact['google_link'], 'href' => $contact['google_profile'], 'external' => true];
+    }
 @endphp
 
 <section id="contact" class="scroll-mt-16 bg-jade-50 py-16 sm:py-20">
@@ -39,7 +43,7 @@
                     <div class="min-w-0">
                         <p class="text-xs text-muted">{{ $detail['label'] }}</p>
                         @if ($detail['href'])
-                            <a href="{{ $detail['href'] }}" class="font-display text-lg font-semibold break-words text-ink transition-colors hover:text-jade-700">{{ $detail['value'] }}</a>
+                            <a href="{{ $detail['href'] }}"@if ($detail['external'] ?? false) target="_blank" rel="noopener"@endif class="font-display text-lg font-semibold break-words text-ink transition-colors hover:text-jade-700">{{ $detail['value'] }}</a>
                         @else
                             <p class="font-display text-lg font-semibold text-ink">{{ $detail['value'] }}</p>
                         @endif
